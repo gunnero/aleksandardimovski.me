@@ -17,4 +17,13 @@ final class ProjectController extends Controller
 
         return view('projects.show', ['project' => $item]);
     }
+
+    public function diagram(string $project, PortfolioContent $content)
+    {
+        abort_unless($item = $content->project($project), 404);
+
+        return response($item['diagram'])
+            ->header('Content-Type', 'text/plain; charset=UTF-8')
+            ->header('Content-Disposition', 'attachment; filename="'.$item['slug'].'-architecture.mmd"');
+    }
 }

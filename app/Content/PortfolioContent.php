@@ -8,6 +8,8 @@ final class PortfolioContent
 {
     private const PROJECT_FIELDS = ['slug', 'name', 'eyebrow', 'summary', 'context', 'problem', 'role', 'responsibilities', 'approach', 'technology', 'challenges', 'security', 'outcome', 'lessons', 'repository', 'confidential', 'featured'];
 
+    private const PROJECT_EVIDENCE_FIELDS = ['executive_summary', 'architecture', 'production', 'roadmap', 'diagram'];
+
     private const ARTICLE_FIELDS = ['slug', 'title', 'description', 'published_at', 'reading_time', 'status', 'body'];
 
     public function projects(): array
@@ -15,6 +17,8 @@ final class PortfolioContent
         return collect(config('portfolio.projects'))->map(function (array $project): array {
             $public = Arr::only($project, self::PROJECT_FIELDS);
             $public['status'] = in_array($project['slug'], ['buildiq', 'mediahub', 'razbudise', 'kalveri'], true) ? 'Active development' : 'Production modernization and support';
+            $evidence = Arr::only(config('project_evidence.'.$project['slug'], []), self::PROJECT_EVIDENCE_FIELDS);
+            $public = array_merge($public, $evidence);
 
             return $public;
         })->all();

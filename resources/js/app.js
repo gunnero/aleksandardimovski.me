@@ -28,3 +28,27 @@ themeButton?.addEventListener('click', () => {
     localStorage.setItem('theme', next);
     updateThemeButton();
 });
+
+const diagrams = document.querySelectorAll('.mermaid');
+if (diagrams.length) {
+    const renderDiagrams = () => {
+        import('mermaid').then(({ default: mermaid }) => {
+            mermaid.initialize({
+                startOnLoad: false,
+                securityLevel: 'strict',
+                theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'neutral',
+                fontFamily: 'Instrument Sans, ui-sans-serif, system-ui, sans-serif',
+            });
+            mermaid.run({ nodes: diagrams });
+        });
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+            observer.disconnect();
+            renderDiagrams();
+        }
+    }, { rootMargin: '300px' });
+
+    observer.observe(diagrams[0]);
+}

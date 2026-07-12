@@ -1,0 +1,83 @@
+.case-study h2 {
+    scroll-margin-top: 7rem;
+}
+
+.architecture-diagram {
+    margin: 2rem 0 3rem;
+    padding: clamp(1rem, 3vw, 2rem);
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+}
+
+.architecture-diagram pre {
+    margin: 0;
+}
+
+.architecture-diagram svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-inline: auto;
+}
+
+.diagram-download {
+    margin-top: 1.5rem;
+    width: 100%;
+}
+
+.principles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 3rem;
+}
+
+.principle {
+    padding: 2rem 0;
+    border-top: 1px solid var(--line);
+}
+
+.principle h2 {
+    margin-bottom: .75rem;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+}
+
+.principle p {
+    margin: 0;
+    color: var(--soft);
+}
+
+.evidence-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+}
+
+.release-list article {
+    display: grid;
+    grid-template-columns: minmax(8rem, .35fr) minmax(0, 1fr);
+    gap: 2rem;
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--line);
+}
+
+.release-list h2,
+.release-list h3,
+.release-list p {
+    margin-top: 0;
+}
+
+@media (max-width: 850px) {
+    .principles-grid,
+    .evidence-links,
+    .release-list article {
+        grid-template-columns: 1fr;
+    }
+
+    .release-list article {
+        gap: .5rem;
+    }
+}
