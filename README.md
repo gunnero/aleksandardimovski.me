@@ -34,6 +34,8 @@ npm audit
 
 Project and article records live in `config/portfolio.php`. Rendering passes through `App\Content\PortfolioContent`, which allowlists public fields. Draft articles are excluded from public routes. Add only information approved for public disclosure.
 
+Verified resume facts live in `config/resume.php`; `docs/008-resume-source-of-truth.md` defines what is verified, derived, omitted, and confidential. The HTML resume is the source for the final PDF.
+
 ## Production build and deployment
 
 Run `composer install --no-dev --optimize-autoloader`, `npm ci && npm run build`, then cache framework configuration and views. The document root must be `/public`. See `docs/004-web01-deployment.md`. This repository does not automate DNS or production changes.

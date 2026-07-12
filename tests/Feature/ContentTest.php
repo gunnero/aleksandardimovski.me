@@ -20,8 +20,10 @@ class ContentTest extends TestCase
 
     public function test_drafts_are_not_publicly_loaded(): void
     {
-        $this->assertSame([], app(PortfolioContent::class)->articles());
-        $this->get('/articles/engineering-notes-coming-soon')->assertNotFound();
+        $articles = app(PortfolioContent::class)->articles();
+        $this->assertCount(1, $articles);
+        $this->assertSame('published', $articles[0]['status']);
+        $this->get('/articles/engineering-notes-draft')->assertNotFound();
     }
 
     public function test_unapproved_private_fields_are_stripped(): void

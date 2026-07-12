@@ -11,7 +11,7 @@ Route::get('/projects', [ProjectController::class, 'index'])->name('projects.ind
 Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
 Route::view('/experience', 'pages.experience')->name('experience');
 Route::view('/resume', 'pages.resume')->name('resume');
-Route::get('/resume/download', fn () => redirect()->route('resume')->with('notice', 'The final PDF resume will be available here soon.'))->name('resume.download');
+Route::get('/resume/download', fn () => response()->download(public_path('files/aleksandar-dimovski-resume.pdf')))->name('resume.download');
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
 Route::view('/contact', 'pages.contact')->name('contact');
