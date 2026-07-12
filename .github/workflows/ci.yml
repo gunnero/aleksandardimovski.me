@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
-        with: { php-version: '8.3', coverage: none }
+        with: { php-version: '8.4', coverage: none }
       - uses: actions/setup-node@v4
         with: { node-version: '20', cache: npm }
       - run: composer validate --strict
