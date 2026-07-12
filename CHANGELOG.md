@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Program 002
+
+- Replaced provisional identity and chronology with verified professional facts.
+- Added recruiter-ready HTML/PDF resume, Kalveri experience, first published article, and final social card.
+- Strengthened resume, project-evidence, PDF-generation, metadata, and confidentiality documentation.
+
 ### Added
 
 - Program 001 Laravel portfolio foundation.

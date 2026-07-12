@@ -12,7 +12,12 @@ final class PortfolioContent
 
     public function projects(): array
     {
-        return collect(config('portfolio.projects'))->map(fn (array $project) => Arr::only($project, self::PROJECT_FIELDS))->all();
+        return collect(config('portfolio.projects'))->map(function (array $project): array {
+            $public = Arr::only($project, self::PROJECT_FIELDS);
+            $public['status'] = in_array($project['slug'], ['buildiq', 'mediahub', 'razbudise', 'kalveri'], true) ? 'Active development' : 'Production modernization and support';
+
+            return $public;
+        })->all();
     }
 
     public function project(string $slug): ?array

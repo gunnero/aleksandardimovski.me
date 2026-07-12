@@ -2,7 +2,7 @@
 
 ## Executive assessment
 
-Program 001 is a strong visual and engineering foundation, but it is **not yet approved for commit as a complete, application-ready portfolio**. The implementation is coherent, responsive, restrained, and technically healthy after review fixes. Web01 compatibility is verified. The only remaining blocker is resume factual completeness: verified chronology and supporting facts have not yet been supplied.
+Program 001 established the verified technical foundation and was deployed at commit `3b275bb`. Its former resume factual-completeness blocker is resolved by Program 002, which introduces the supplied chronology, education, languages, certifications, and final resume artifacts.
 
 Local review URL: `http://127.0.0.1:8013` (Vite: `http://127.0.0.1:5178`). No deployment, DNS change, commit, or push was performed.
 

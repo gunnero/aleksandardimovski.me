@@ -1,4 +1,4 @@
-@props(['title', 'description', 'image' => '/images/social-card.svg', 'noindex' => false])
+@props(['title', 'description', 'image' => '/images/social-card.png', 'noindex' => false])
 <!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
@@ -16,7 +16,7 @@
     <script>document.documentElement.dataset.theme=localStorage.getItem('theme')||((matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light')</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @php
-        $personSchema = ['@context' => 'https://schema.org', '@type' => 'Person', 'name' => 'Aleksandar Dimovski', 'url' => config('app.url'), 'jobTitle' => 'Senior PHP / Laravel Engineer', 'sameAs' => [config('portfolio.github')]];
+        $personSchema = ['@context' => 'https://schema.org', '@type' => 'Person', 'name' => 'Aleksandar Dimovski', 'url' => config('app.url'), 'jobTitle' => 'Senior PHP / Laravel Engineer', 'description' => 'Product Engineer and Founder & Lead Software Engineer at Kalveri', 'email' => config('portfolio.email'), 'telephone' => config('portfolio.phone'), 'address' => ['@type' => 'PostalAddress', 'addressLocality' => 'Bitola', 'postalCode' => '7000', 'addressCountry' => 'MK'], 'worksFor' => ['@type' => 'Organization', 'name' => 'Kalveri'], 'sameAs' => [config('portfolio.github')]];
         $websiteSchema = ['@context' => 'https://schema.org', '@type' => 'WebSite', 'name' => 'Aleksandar Dimovski', 'url' => config('app.url')];
         $jsonFlags = JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
     @endphp
