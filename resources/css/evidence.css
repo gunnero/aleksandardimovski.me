@@ -48,6 +48,21 @@
     color: var(--soft);
 }
 
+.principles-cta {
+    margin-top: 1rem;
+}
+
+.contact-location p {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .5rem;
+}
+
+.contact-location .eyebrow {
+    margin: 0;
+}
+
 .evidence-links {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

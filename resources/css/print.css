@@ -1,0 +1,182 @@
+@media print {
+    @page {
+        size: A4;
+        margin: 11mm 13mm;
+    }
+
+    html,
+    html[data-theme='dark'],
+    html[data-theme='light'] {
+        --bg: #fff;
+        --surface: #fff;
+        --muted: #fff;
+        --text: #111;
+        --soft: #333;
+        --line: #d4d4d4;
+        --accent: #111;
+        --accent2: #111;
+        --shadow: none;
+        background: #fff !important;
+        color: #111 !important;
+        color-scheme: light !important;
+    }
+
+    body {
+        background: #fff !important;
+        color: #111 !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+        font-size: 11pt;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+        transition: none !important;
+    }
+
+    body:has(.resume-final) > .site-header,
+    body:has(.resume-final) > .footer,
+    body:has(.resume-final) .resume-toolbar,
+    body:has(.resume-final) .skip-link,
+    body:has(.resume-final) main > :not(.resume-final) {
+        display: none !important;
+    }
+
+    .site-header,
+    .footer,
+    .theme-toggle,
+    .nav-toggle,
+    .resume-toolbar,
+    .skip-link {
+        display: none !important;
+        position: static !important;
+    }
+
+    main {
+        padding: 0 !important;
+    }
+
+    .resume-final {
+        display: block !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: #fff !important;
+        color: #111 !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+        font-size: 8.5pt;
+        line-height: 1.32;
+    }
+
+    .resume-final *,
+    .resume-final h1,
+    .resume-final h2,
+    .resume-final h3,
+    .resume-final strong {
+        color: #111 !important;
+    }
+
+    .resume-final p,
+    .resume-final li,
+    .resume-final address,
+    .resume-final .role-heading strong {
+        color: #333 !important;
+    }
+
+    .resume-final a {
+        color: #111 !important;
+        text-decoration: underline !important;
+        text-decoration-thickness: .5pt;
+        text-underline-offset: 1.5pt;
+    }
+
+    .resume-final header {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between;
+        padding-bottom: 8pt;
+        border-color: #777 !important;
+    }
+
+    .resume-final address {
+        text-align: right !important;
+    }
+
+    .resume-final h1 {
+        margin: .2rem 0 1rem;
+        font-size: 30pt;
+    }
+
+    .resume-final header p {
+        margin: .25rem 0;
+    }
+
+    .resume-final section {
+        padding: 7pt 0;
+        border-color: #d4d4d4 !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .resume-final section h2 {
+        margin: 0 0 5pt;
+        color: #111 !important;
+    }
+
+    .resume-final h3 {
+        margin-top: 0;
+        font-size: 10pt;
+    }
+
+    .resume-final p {
+        margin: 3pt 0;
+    }
+
+    .resume-final ul {
+        margin: 3pt 0;
+        padding-left: 15pt;
+    }
+
+    .resume-final li {
+        margin: 1pt 0;
+    }
+
+    .resume-final .competency-list {
+        gap: 3pt;
+    }
+
+    .resume-final .competency-list span {
+        padding: 2pt 4pt;
+        border-color: #d4d4d4 !important;
+    }
+
+    .resume-page-break {
+        display: block;
+        break-before: page;
+        page-break-before: always;
+    }
+
+    .resume-details {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 20pt;
+    }
+
+    .resume-projects {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0 15pt;
+    }
+
+    .resume-final .role-heading {
+        display: flex !important;
+    }
+}

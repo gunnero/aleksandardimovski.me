@@ -14,7 +14,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <script>document.documentElement.dataset.theme=localStorage.getItem('theme')||((matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light')</script>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/css/print.css', 'resources/js/app.js'])
     @php
         $personSchema = ['@context' => 'https://schema.org', '@type' => 'Person', 'name' => 'Aleksandar Dimovski', 'url' => config('app.url'), 'jobTitle' => 'Senior PHP / Laravel Engineer', 'description' => 'Product Engineer and Founder & Lead Software Engineer at Kalveri', 'email' => config('portfolio.email'), 'telephone' => config('portfolio.phone'), 'address' => ['@type' => 'PostalAddress', 'addressLocality' => 'Bitola', 'postalCode' => '7000', 'addressCountry' => 'MK'], 'worksFor' => ['@type' => 'Organization', 'name' => 'Kalveri'], 'sameAs' => [config('portfolio.github')]];
         $websiteSchema = ['@context' => 'https://schema.org', '@type' => 'WebSite', 'name' => 'Aleksandar Dimovski', 'url' => config('app.url')];
