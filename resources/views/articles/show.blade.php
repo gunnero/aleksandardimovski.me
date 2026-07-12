@@ -1,0 +1,1 @@
+<x-layout :title="$article['title']" :description="$article['description']"><x-page-hero eyebrow="Article" :title="$article['title']" :intro="$article['description']"/><article class="section container prose">{!! Str::markdown($article['body'], ['html_input' => 'strip', 'allow_unsafe_links' => false]) !!}</article></x-layout>
