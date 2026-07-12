@@ -1,6 +1,6 @@
 # Program 003: Engineering Evidence and Case Studies
 
-Status: Approved for commit and deployment on July 13, 2026.
+Status: Committed and deployed to production on July 13, 2026.
 
 ## Objective
 
@@ -36,7 +36,7 @@ The principles make the decision system behind the projects explicit: understand
 
 ### Release History
 
-The release history records only approved, verifiable portfolio releases. Program 003 is shown as in review until it is approved, committed, and later deployed.
+The release history records only approved, verifiable portfolio releases. Program 003 is recorded after its reviewed commit was deployed and verified in production.
 
 ## Validation plan
 

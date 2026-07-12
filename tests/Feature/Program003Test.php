@@ -56,7 +56,7 @@ class Program003Test extends TestCase
     public function test_engineering_principles_and_release_history_are_public_and_indexed(): void
     {
         $this->get('/engineering-principles')->assertOk()->assertSee('Evidence over claims');
-        $this->get('/release-history')->assertOk()->assertSee('Program 003')->assertSee('In review');
+        $this->get('/release-history')->assertOk()->assertSee('Program 003')->assertSee('Engineering evidence and case studies');
         $this->get('/sitemap.xml')
             ->assertOk()
             ->assertSee('/engineering-principles')

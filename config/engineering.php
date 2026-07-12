@@ -10,6 +10,7 @@ return [
         ['title' => 'Keep AI accountable', 'summary' => 'AI-assisted workflows can accelerate engineering, but architecture, privacy, review, tests, and release decisions remain human-accountable.'],
     ],
     'releases' => [
+        ['version' => 'Program 003', 'date' => 'July 2026', 'title' => 'Engineering evidence and case studies', 'summary' => 'Six architecture-led engineering case studies, downloadable Mermaid evidence, engineering principles, release history, confidentiality controls, responsive verification, and production deployment.'],
         ['version' => 'v0.2.0', 'date' => 'July 2026', 'title' => 'Professional identity and final resume', 'summary' => 'Verified career chronology, final two-page resume, project evidence policy, published legacy-modernization article, structured data, social artwork, and production release verification.'],
         ['version' => 'v0.1.0', 'date' => 'July 2026', 'title' => 'Portfolio foundation', 'summary' => 'Laravel portfolio foundation, structured local content, responsive light/dark design, accessible public routes, confidentiality boundaries, SEO, CI, and web01 deployment.'],
     ],
