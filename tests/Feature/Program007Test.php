@@ -43,7 +43,7 @@ class Program007Test extends TestCase
             ->assertSee('https://aleksandardimovski.me/projects/mediahub')
             ->assertSee('https://github.com/gunnero/aleksandardimovski.me')
             ->assertSee('https://github.com/gunnero/kalveri')
-            ->assertDontSee('LinkedIn')
+            ->assertSee('https://www.linkedin.com/in/dimovskialeksandar/')
             ->assertDontSee('onefivefour'.'-ai-platform');
 
         $this->assertFileExists(public_path('images/qr/buildiq-case-study.png'));
