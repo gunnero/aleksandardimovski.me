@@ -38,7 +38,7 @@ return new class extends Migration
             $table->longText('explanation');
             $table->timestamp('evaluated_at');
             $table->timestamps();
-            $table->unique(['job_opportunity_id', 'preference_rule_id']);
+            $table->unique(['job_opportunity_id', 'preference_rule_id'], 'job_rule_eval_opp_rule_uq');
         });
 
         Schema::table('job_opportunities', function (Blueprint $table): void {
@@ -51,6 +51,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('job_opportunities', fn (Blueprint $table) => $table->dropColumn(['base_fit_score', 'preference_adjustment', 'preference_decision']));
+        Schema::table('job_rule_evaluations', function (Blueprint $table): void {
+            $table->dropForeign(['job_opportunity_id']);
+            $table->dropForeign(['preference_rule_id']);
+            $table->dropUnique('job_rule_eval_opp_rule_uq');
+        });
         Schema::dropIfExists('job_rule_evaluations');
         Schema::dropIfExists('job_preference_rules');
     }
