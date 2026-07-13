@@ -4,4 +4,6 @@ Every case study must identify status, role, problem, approach, stack, responsib
 
 Public links require explicit confirmation that a repository is public and recruiter-appropriate. Private project names approved for sanitized use may appear, but source, internal URLs, customer data, credentials, and business rules may not.
 
+The approved public repository set is BuildIQ, MediaHub, Kalveri, and this portfolio. All other repositories remain unlinked unless a later evidence review explicitly approves them; quarantined repositories do not become eligible merely because their visibility is public.
+
 BuildIQ, MediaHub, and Razbudise are active products. Hera and Nema30 are distinct sanitized legacy/backoffice engagements. Kalveri is the software company and product ecosystem, not a single completed application.

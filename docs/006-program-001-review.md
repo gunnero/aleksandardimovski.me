@@ -63,11 +63,11 @@ Expected production cache policy: fingerprinted `/build/assets/*` should receive
 
 ## Production compatibility
 
-Repository requirements are PHP `^8.3` and Laravel `^13.8`. Composer 2 is required. Node 20+ is needed for asset builds only. The document root must be `public/`; writable paths are `storage/` and `bootstrap/cache/`. Deployment commands and rollback are documented in `docs/004-web01-deployment.md`.
+Repository requirements are defined in the committed dependency manifests. The public deployment principles are documented in `docs/004-public-deployment-principles.md`; environment-specific runtime inventories and operational paths remain in private release records.
 
-Web01 compatibility is verified with PHP CLI 8.4.23, PHP-FPM 8.4.23, Composer 2.7.1, Node.js 22.23.1, npm 10.9.8, and all PHP extensions required by the locked dependencies. Additional available modules include MySQL, Redis, Intl, GD, Imagick, ZIP, OPcache, and Sodium.
+Production compatibility was verified against the locked dependency requirements and the supported application runtime. Exact infrastructure versions and installed-module inventories are intentionally omitted from public evidence.
 
-Composer 2.7.1 emits PHP 8.4 deprecation notices. Updating Composer to the latest stable release before deployment is recommended, but no Composer update was performed during this review. During deployment, `composer check-platform-reqs --no-dev` must be run from inside the deployed application directory as the Linux site user.
+Platform requirements are checked from the reviewed release before activation. Runtime-tool maintenance remains a separate operational concern and is not performed by application deployment.
 
 ## Findings
 
@@ -76,7 +76,7 @@ Composer 2.7.1 emits PHP 8.4 deprecation notices. Updating Composer to the lates
 | P001-R01 | High | JSON-LD was corrupted in rendered HTML | Fixed and parse-tested |
 | P001-R02 | High | CI tested Blade pages before the Vite manifest existed | Fixed |
 | P001-R03 | High | Resume lacks verified chronology and supporting facts | Open; factual input required |
-| P001-R04 | High | web01 PHP/Laravel compatibility is unconfirmed | Resolved; runtime and required extensions verified |
+| P001-R04 | High | Production PHP/Laravel compatibility is unconfirmed | Resolved; runtime and required extensions verified |
 | P001-R05 | Medium | Future article Markdown allowed raw HTML/unsafe links | Fixed and tested |
 | P001-R06 | Medium | Kalveri was inaccurately framed as a finished generic platform | Fixed |
 | P001-R07 | Medium | Name, Product Engineer position, and 10+ years were weak in the hero | Fixed |
@@ -92,4 +92,4 @@ Composer 2.7.1 emits PHP 8.4 deprecation notices. Updating Composer to the lates
 
 ## Recommendation
 
-**Reject Program 001 for commit as “complete” until the resume facts are verified.** Web01 compatibility is resolved, and the implementation is technically ready once authoritative resume data is supplied. After updating the resume and checking the final metadata/email values, rerun the documented gates and approve the commit.
+**Reject Program 001 for commit as “complete” until the resume facts are verified.** Production compatibility is resolved, and the implementation is technically ready once authoritative resume data is supplied. After updating the resume and checking the final metadata/email values, rerun the documented gates and approve the commit.
