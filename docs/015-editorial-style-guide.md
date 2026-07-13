@@ -25,6 +25,8 @@ Do not frame technologies as winners and losers. Explain why a stack fit a produ
 
 Articles should be 1,200–1,800 words, use a comfortable reading measure, preserve heading hierarchy, and avoid dense text walls. Links should be contextual and restrained. Code blocks must be necessary, readable in both themes, and free of secrets or private topology.
 
+Article detail pages use the shared structure and component behavior defined in `docs/018-article-component-guide.md`. Callouts must use an approved semantic label, remain evidence-based, and be limited to one to three per article. Do not add callouts merely to break up text.
+
 ## Prohibited filler
 
 Avoid generic openings, fake quotes, exaggerated claims, marketing language, “in today’s fast-paced world,” and “passionate developer.” Every paragraph should add evidence, reasoning, or a useful limitation.

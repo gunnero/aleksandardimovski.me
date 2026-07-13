@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Program 006
+
+- Refined article detail pages with a compact aligned header and 720px long-form reading column.
+- Added article-only reading progress, generated desktop table of contents, evidence-based callouts, publication footer, previous/next navigation, and related reading.
+- Added reusable editorial styles for lists, blockquotes, code, tables, figures, captions, and mobile layouts without changing article facts or the homepage.
+- Added article component documentation and Program 006 accessibility, metadata, confidentiality, and navigation tests.
+
 ### Program 005
 
 - Added three evidence-based articles on BuildIQ product engineering, legacy PHP modernization, and safe production deployment.

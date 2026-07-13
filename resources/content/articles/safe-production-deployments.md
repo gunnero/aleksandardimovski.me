@@ -2,6 +2,10 @@ A deployment is the point where reviewed code meets a real runtime, real configu
 
 My approach to Laravel and legacy PHP deployments comes from maintaining applications that need controlled change. The exact servers, accounts, paths, and private domains do not belong in a public article. The sequence and reasoning do.
 
+> **Production note**
+>
+> A deployment should promote an exact reviewed commit and preserve a tested rollback path.
+
 ## Deploy the reviewed commit
 
 I begin by identifying the exact commit that was reviewed and approved. Branch names can move. A commit identifier does not.

@@ -15,6 +15,19 @@ final class ArticleController extends Controller
     {
         abort_unless($item = $content->article($article), 404);
 
-        return view('articles.show', ['article' => $item]);
+        $articles = collect($content->articles());
+        $index = $articles->search(fn (array $candidate) => $candidate['slug'] === $article);
+        $related = collect($item['related_slugs'] ?? [])
+            ->map(fn (string $slug) => $articles->firstWhere('slug', $slug))
+            ->filter()
+            ->take(3)
+            ->values();
+
+        return view('articles.show', [
+            'article' => $item,
+            'previous' => $articles->get($index + 1),
+            'next' => $index > 0 ? $articles->get($index - 1) : null,
+            'related' => $related,
+        ]);
     }
 }

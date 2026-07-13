@@ -2,6 +2,10 @@ Legacy PHP systems are often discussed as if age alone makes them candidates for
 
 Both systems are presented publicly as sanitized case studies. They are distinct applications with different responsibilities. I do not publish their private users, databases, internal addresses, infrastructure, or client-sensitive rules. The useful public evidence is the engineering method, not confidential implementation detail.
 
+> **Engineering principle**
+>
+> Separate “I dislike this implementation” from “this behavior is wrong.”
+
 ## Understand the business workflow first
 
 Before changing code, I trace the workflow that the code supports. That means identifying inputs, decisions, database changes, generated output, dependencies, and the people or systems that consume the result.
