@@ -19,3 +19,5 @@ Employment type, team size, revenue, customer/user counts, funding, formal degre
 ## Confidential details intentionally excluded
 
 Private code, repositories, credentials, internal URLs, customer information, production architecture, financial data, and client-sensitive workflows never belong in resume or portfolio content.
+
+Program 007 adds public engineering evidence for BuildIQ, MediaHub, the portfolio, and Kalveri. Only BuildIQ and MediaHub receive QR codes, and those codes point to their portfolio case studies. The full destination is also selectable and clickable, preserving ATS access and making no information QR-only. `docs/022-resume-qr-code-policy.md` defines the generation and verification boundary.

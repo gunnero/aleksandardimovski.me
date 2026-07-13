@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0] - 2026-07-13
+
+- Added verified repository links for BuildIQ, MediaHub, Kalveri, and the portfolio.
+- Added explicit public-repository and private-case-study states without exposing private repository URLs.
+- Added locally generated, independently decoded BuildIQ and MediaHub resume QR codes while preserving the two-page A4 PDF.
+- Added repository-link, QR, structured-data, confidentiality, and print validation for the final professional-presence release.
+
 ## [Unreleased]
 
 ### Program 006

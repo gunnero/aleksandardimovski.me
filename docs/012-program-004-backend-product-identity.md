@@ -21,7 +21,7 @@ The supporting narrative states more than ten years of professional PHP and web-
 
 ## BuildIQ correction
 
-BuildIQ is described consistently as an AI-assisted construction management platform in active development built with Python, FastAPI, Starlette, PostgreSQL, React, TypeScript, Vite, and Vitest. Current workflows are deterministic. AI assistance remains bounded by authorization, human review, and deterministic product rules and is not presented as an implemented autonomous foundation.
+BuildIQ is described consistently as a construction management platform in active development built with Python, FastAPI, Starlette, PostgreSQL, React, TypeScript, Vite, and Vitest. Current workflows are deterministic. Any future assisted capability remains a bounded product direction and is not presented as implemented functionality.
 
 Public engineering evidence includes 127 backend tests, 45 frontend tests, CI, dependency auditing, Gitleaks, route-level lazy loading, release documentation, architecture documentation, authorization, subscription enforcement, and production configuration gates. No customer, revenue, adoption, or commercial-traction claim is made.
 

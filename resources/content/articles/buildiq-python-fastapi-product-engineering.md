@@ -8,7 +8,7 @@ The useful lesson was not that one framework wins. It was that technology choice
 
 ## Why BuildIQ uses Python and FastAPI
 
-BuildIQ is an AI-assisted construction management platform in active development. Its authoritative workflows are deterministic: permissions, subscription state, project data, calculations, and release gates cannot depend on probabilistic output. Python was a practical fit for exploring bounded assistance alongside conventional application behavior, while FastAPI provided a clear way to define typed HTTP boundaries.
+BuildIQ is a construction management platform in active development. Its authoritative workflows are deterministic: permissions, subscription state, project data, calculations, and release gates cannot depend on probabilistic output. Python is a practical fit for the product domain, while FastAPI provides a clear way to define typed HTTP boundaries. Any future assisted capability remains separate from the implemented public evidence.
 
 That choice did not make the product automatically well designed. A framework can make endpoints concise, but it cannot decide where a business rule belongs, which actor may execute it, or how a failure should be represented. Those decisions still required deliberate product and architecture work.
 

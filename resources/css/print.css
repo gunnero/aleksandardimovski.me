@@ -193,4 +193,8 @@
     .resume-final .role-heading {
         display: flex !important;
     }
+
+    .resume-final .public-work { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 6pt 14pt; }
+    .resume-final .public-work-entry { display: grid !important; grid-template-columns: 1fr 54pt !important; gap: 7pt; align-items: center; }
+    .resume-final .resume-qr { width: 54pt; height: 54pt; padding: 3pt; background: #fff !important; border: .5pt solid #bbb !important; }
 }
