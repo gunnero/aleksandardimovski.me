@@ -67,7 +67,7 @@ class Program008Test extends TestCase
         $question->confirmed_at = now();
         $question->confirmed_by = $u->id;
         $question->save();
-        $this->actingAs($u)->post(route('workspace.applications.approve', $app))->assertRedirect();
+        $this->actingAs($u)->post(route('workspace.applications.approve', $app), ['approval_confirmation' => '1'])->assertRedirect();
         $app->refresh();
         $this->assertSame('approved_for_submission', $app->status);
         $this->assertNotNull($app->approved_application_hash);
@@ -117,6 +117,58 @@ class Program008Test extends TestCase
             ->expectsOutput('Unsafe or invalid credentials refused.')
             ->assertExitCode(2);
         $this->assertDatabaseCount('users', 0);
+    }
+
+    public function test_every_private_view_uses_the_shared_shell_and_vite_asset(): void
+    {
+        $user = $this->user();
+        $job = $this->job($user);
+        $application = new JobApplication(['status' => 'preparing_application', 'final_application_url' => $job->original_url]);
+        $application->user_id = $user->id;
+        $application->job_opportunity_id = $job->id;
+        $application->save();
+        foreach ([route('workspace.dashboard'), route('workspace.jobs.index'), route('workspace.jobs.show', $job), route('workspace.profile.show'), route('workspace.applications.show', $application)] as $url) {
+            $this->actingAs($user)->get($url)->assertOk()->assertSee('Private workspace')->assertSee('/build/assets/workspace-')->assertSee('Skip to workspace content');
+        }
+        auth()->logout();
+        $this->get(route('workspace.login'))->assertOk()->assertSee('Private job workspace')->assertSee('/build/assets/workspace-');
+        $this->get(route('home'))->assertOk()->assertDontSee('Job inbox')->assertDontSee('Candidate profile');
+    }
+
+    public function test_workspace_components_include_mobile_safe_patterns(): void
+    {
+        $css = file_get_contents(resource_path('css/workspace.css'));
+
+        $this->assertStringContainsString('@media(max-width:620px)', $css);
+        $this->assertStringContainsString('.field-row{grid-template-columns:1fr', $css);
+        $this->assertStringContainsString('.button{width:100%', $css);
+        $this->assertStringContainsString('.sticky-action-bar{position:static}', $css);
+        foreach (['action-bar', 'breadcrumb', 'button', 'callout', 'card', 'data-list', 'empty-value', 'field-row', 'status-badge', 'validation-summary'] as $component) {
+            $this->assertFileExists(resource_path("views/components/workspace/{$component}.blade.php"));
+        }
+    }
+
+    public function test_final_review_safety_state_is_human_readable_and_blocks_unresolved_approval(): void
+    {
+        $user = $this->user();
+        $job = $this->job($user);
+        $application = new JobApplication(['status' => 'ready_for_final_review', 'final_application_url' => $job->original_url]);
+        $application->user_id = $user->id;
+        $application->job_opportunity_id = $job->id;
+        $application->save();
+        ApplicationQuestion::create(['job_application_id' => $application->id, 'question' => 'Legal declaration?', 'requires_user_confirmation' => true, 'legal_or_sensitive' => true]);
+        $response = $this->actingAs($user)->get(route('workspace.applications.show', $application));
+        $response->assertOk()->assertSee('Approving authorizes the exact displayed application package for submission. Any later change invalidates approval.')
+            ->assertSee('Required questions still need user confirmation.')->assertSee('No answers prepared')->assertSee('No document selected')
+            ->assertSee('Resolve blockers before approval')->assertSee('approval_confirmation')->assertSee('required', false)
+            ->assertSee('disabled', false)->assertDontSee('ready_for_final_review')->assertDontSee('null');
+    }
+
+    public function test_validation_errors_render_inside_private_layout(): void
+    {
+        $user = $this->user();
+        $this->actingAs($user)->from(route('workspace.profile.show'))->put(route('workspace.profile.update'), [])->assertRedirect(route('workspace.profile.show'));
+        $this->actingAs($user)->get(route('workspace.profile.show'))->assertOk()->assertSee('Please review the highlighted information')->assertSee('Private workspace');
     }
 
     private function job(User $u): JobOpportunity

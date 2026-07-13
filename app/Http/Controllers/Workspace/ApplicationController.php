@@ -13,8 +13,22 @@ class ApplicationController extends Controller
     public function show(Request $r, JobApplication $application)
     {
         $this->owned($r, $application);
+        $application->load('opportunity', 'questions', 'accountTasks');
+        $blockedReasons = [];
+        if ($application->questions->where('requires_user_confirmation', true)->whereNull('confirmed_at')->isNotEmpty()) {
+            $blockedReasons[] = 'Required questions still need user confirmation.';
+        }
+        if (! filter_var($application->final_application_url, FILTER_VALIDATE_URL)) {
+            $blockedReasons[] = 'A valid final application URL is required.';
+        }
+        if (! in_array($application->opportunity->source_status, ['open', 'verified_open'], true)) {
+            $blockedReasons[] = 'The source posting is not verified open.';
+        }
+        if ($application->opportunity->application_deadline?->isPast()) {
+            $blockedReasons[] = 'The application deadline has passed.';
+        }
 
-        return view('workspace.applications.show', ['application' => $application->load('opportunity', 'questions', 'accountTasks')]);
+        return view('workspace.applications.show', compact('application', 'blockedReasons'));
     }
 
     public function approve(Request $r, JobApplication $application, ApplicationApproval $approval, StateTransitions $transitions)
@@ -26,7 +40,7 @@ class ApplicationController extends Controller
         abort_unless(filter_var($application->final_application_url, FILTER_VALIDATE_URL), 422, 'A valid application URL is required.');
         abort_unless(in_array($application->opportunity->source_status, ['open', 'verified_open'], true), 422, 'The job must be verified open.');
         abort_if($application->opportunity->application_deadline?->isPast(), 422, 'The application deadline has passed.');
-        $data = $r->validate(['approval_note' => 'nullable|string|max:2000']);
+        $data = $r->validate(['approval_confirmation' => 'accepted', 'approval_note' => 'nullable|string|max:2000']);
         $approval->approve($application, $r->user(), $data['approval_note'] ?? null);
 
         return back()->with('status', 'Submission approved for the exact content shown.');

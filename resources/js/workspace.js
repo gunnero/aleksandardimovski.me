@@ -1,0 +1,24 @@
+const root = document.documentElement;
+const toggle = document.querySelector('[data-theme-toggle]');
+const stored = window.localStorage.getItem('workspace-theme');
+const initial = stored === 'light' || stored === 'dark'
+    ? stored
+    : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+const applyTheme = (theme) => {
+    root.dataset.theme = theme;
+    if (toggle) {
+        const dark = theme === 'dark';
+        toggle.setAttribute('aria-pressed', String(dark));
+        toggle.textContent = dark ? 'Use light theme' : 'Use dark theme';
+    }
+};
+
+applyTheme(initial);
+toggle?.addEventListener('click', () => {
+    const theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    window.localStorage.setItem('workspace-theme', theme);
+    applyTheme(theme);
+});
+
+document.querySelector('.validation-summary')?.focus();
