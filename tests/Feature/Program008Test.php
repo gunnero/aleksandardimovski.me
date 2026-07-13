@@ -158,7 +158,7 @@ class Program008Test extends TestCase
         $this->assertStringContainsString('.button{width:100%', $css);
         $this->assertStringContainsString('.sticky-action-bar{position:static}', $css);
         $this->assertStringContainsString('scrollbar-width:thin', $css);
-        $this->assertStringContainsString('scroll-padding-inline:12px', $css);
+        $this->assertStringContainsString('scroll-padding-inline:10px', $css);
         $workspaceJavascript = file_get_contents(resource_path('js/workspace.js'));
         $this->assertStringContainsString("addEventListener('focusin'", $workspaceJavascript);
         $this->assertStringContainsString("querySelector('.is-current')", $workspaceJavascript);
