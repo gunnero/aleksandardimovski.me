@@ -21,7 +21,7 @@ class ContentTest extends TestCase
     public function test_drafts_are_not_publicly_loaded(): void
     {
         $articles = app(PortfolioContent::class)->articles();
-        $this->assertCount(1, $articles);
+        $this->assertCount(3, $articles);
         $this->assertSame('published', $articles[0]['status']);
         $this->get('/articles/engineering-notes-draft')->assertNotFound();
     }
@@ -38,9 +38,10 @@ class ContentTest extends TestCase
 
     public function test_published_markdown_strips_raw_html_and_unsafe_links(): void
     {
-        config()->set('portfolio.articles', [[
+        config()->set('articles', [[
             'slug' => 'safe-markdown', 'title' => 'Safe Markdown', 'description' => 'Safety test',
-            'published_at' => '2026-07-12', 'reading_time' => 1, 'status' => 'published',
+            'published_at' => '2026-07-12', 'modified_at' => '2026-07-12', 'reading_time' => 1,
+            'category' => 'Testing', 'keywords' => [], 'status' => 'published',
             'body' => '<script>alert(1)</script> [unsafe](javascript:alert(1))',
         ]]);
 

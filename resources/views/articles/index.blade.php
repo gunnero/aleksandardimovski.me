@@ -1,1 +1,11 @@
-<x-layout title="Articles" description="Engineering notes from Aleksandar Dimovski on PHP, Laravel, product engineering, and production systems."><x-page-hero eyebrow="Articles" title="Notes from building and operating software." intro="Future articles will be grounded in real engineering experience. Nothing is published here merely to fill a content grid."/><section class="section"><div class="container empty-state"><p class="eyebrow">No published articles yet</p><h2>Thoughtful writing takes a little longer.</h2><p>I’m preparing practical notes on product engineering, PHP modernization, Laravel architecture, and production operations.</p><a class="button" href="{{ route('contact') }}">Start a conversation</a></div></section></x-layout>
+<x-layout title="Articles" description="Practical engineering notes from real systems covering PHP, Laravel, Python, legacy modernization, security, deployment, and product engineering.">
+<x-page-hero eyebrow="Articles" title="Practical engineering notes from real systems." intro="Writing about PHP, Laravel, Python, legacy modernization, security, deployment, and product engineering based on projects I actively build and maintain."/>
+<section class="section"><div class="container"><div class="article-card-grid">
+@foreach($articles as $article)
+<article class="article-card">
+    <div><p class="eyebrow">{{ $article['category'] }}</p><h2><a href="{{ route('articles.show', $article['slug']) }}">{{ $article['title'] }}</a></h2><p>{{ $article['description'] }}</p></div>
+    <div class="article-meta"><time datetime="{{ $article['published_at'] }}">{{ Illuminate\Support\Carbon::parse($article['published_at'])->format('F j, Y') }}</time><span>{{ $article['reading_time'] }} min read</span></div>
+</article>
+@endforeach
+</div></div></section>
+</x-layout>
