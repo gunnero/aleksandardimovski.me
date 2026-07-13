@@ -1,0 +1,40 @@
+name: Content correction
+description: Report inaccurate or outdated public portfolio content.
+title: "[Content]: "
+body:
+  - type: input
+    id: affected-content
+    attributes:
+      label: Affected page or article
+      description: Provide the public URL or title.
+      placeholder: https://aleksandardimovski.me/...
+    validations:
+      required: true
+  - type: textarea
+    id: incorrect-text
+    attributes:
+      label: Incorrect text
+      description: Quote only the portion that needs correction.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-correction
+    attributes:
+      label: Proposed correction
+      description: Provide concise replacement wording.
+    validations:
+      required: true
+  - type: input
+    id: supporting-source
+    attributes:
+      label: Supporting source
+      description: Link to a reliable public source or describe the non-sensitive evidence.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confidentiality-confirmation
+    attributes:
+      label: Confidentiality confirmation
+      options:
+        - label: I confirm this report contains no confidential, personal, security-sensitive, or private production information.
+          required: true
