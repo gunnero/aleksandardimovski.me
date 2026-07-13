@@ -25,9 +25,13 @@ return new class extends Migration
         Schema::create('job_opportunities', function (Blueprint $t): void {
             $t->id();
             $t->foreignId('user_id')->constrained()->cascadeOnDelete();
-            foreach (['company_name', 'role_title', 'original_url', 'normalized_url', 'source', 'remote_scope', 'location', 'employment_type', 'salary_currency', 'salary_period', 'source_status', 'location_eligibility', 'international_contracting', 'salary_recommendation', 'review_status', 'discovered_by'] as $c) {
+            foreach (['company_name', 'role_title', 'original_url', 'normalized_url', 'remote_scope', 'location', 'employment_type', 'salary_currency', 'salary_period', 'location_eligibility', 'international_contracting', 'salary_recommendation', 'discovered_by'] as $c) {
                 $t->text($c)->nullable();
             }
+            $t->char('normalized_url_hash', 64)->nullable();
+            $t->string('source', 100)->nullable();
+            $t->string('source_status', 64)->nullable();
+            $t->string('review_status', 64)->nullable();
             $t->string('external_job_id')->nullable();
             $t->date('posting_date')->nullable();
             $t->timestamp('discovered_at');
@@ -45,7 +49,7 @@ return new class extends Migration
             $t->timestamp('reviewed_at')->nullable();
             $t->string('rejection_reason')->nullable();
             $t->timestamps();
-            $t->unique(['user_id', 'normalized_url']);
+            $t->unique(['user_id', 'normalized_url_hash']);
             $t->unique(['user_id', 'source', 'external_job_id']);
             $t->index(['user_id', 'review_status']);
         });

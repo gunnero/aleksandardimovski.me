@@ -87,6 +87,20 @@ class Program008Test extends TestCase
         unlink($path);
     }
 
+    public function test_import_stores_a_fixed_length_normalized_url_hash(): void
+    {
+        $user = $this->user();
+        $path = storage_path('framework/testing/import-hash.json');
+        file_put_contents($path, json_encode([['company_name' => 'Acme', 'role_title' => 'Engineer', 'original_url' => 'https://example.com/jobs/1?utm_source=test', 'source' => 'manual']]));
+
+        $this->artisan('jobs:import-discovered', ['json-file' => $path, '--user' => $user->email])->assertSuccessful();
+
+        $job = JobOpportunity::sole();
+        $this->assertSame(hash('sha256', 'https://example.com/jobs/1'), $job->normalized_url_hash);
+        $this->assertSame(64, strlen($job->normalized_url_hash));
+        unlink($path);
+    }
+
     public function test_sensitive_profile_values_are_encrypted_at_rest(): void
     {
         $user = $this->user();

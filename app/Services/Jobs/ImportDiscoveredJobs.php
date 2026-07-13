@@ -32,6 +32,7 @@ final class ImportDiscoveredJobs
                     '*' => 'nullable',
                 ])->validate();
                 $data['normalized_url'] = $this->normalizeUrl($data['original_url']);
+                $data['normalized_url_hash'] = hash('sha256', $data['normalized_url']);
                 if (JobOpportunity::where('user_id', $user->id)->where('normalized_url', $data['normalized_url'])->exists()) {
                     $report['duplicates']++;
                     $report['items'][] = ['index' => $index, 'status' => 'duplicate', 'url' => $data['normalized_url']];
@@ -56,7 +57,7 @@ final class ImportDiscoveredJobs
                 $report['warnings'] += count($warnings);
                 if (! $dryRun) {
                     DB::transaction(function () use ($user, $data): void {
-                        $job = new JobOpportunity(Arr::only($data, [...self::ALLOWED, 'normalized_url']));
+                        $job = new JobOpportunity(Arr::only($data, [...self::ALLOWED, 'normalized_url', 'normalized_url_hash']));
                         $job->user_id = $user->id;
                         $job->normalized_url = $data['normalized_url'];
                         $job->discovered_at = now();
