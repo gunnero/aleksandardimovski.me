@@ -28,7 +28,7 @@ class SeoTest extends TestCase
     public function test_home_states_core_positioning_immediately(): void
     {
         $response = $this->get('/');
-        foreach (['Aleksandar Dimovski', 'Senior PHP / Laravel Engineer', 'Product Engineer', 'more than 10 years', 'enterprise software', 'AI-powered products', 'backend systems'] as $copy) {
+        foreach (['Aleksandar Dimovski', 'Senior PHP / Laravel Engineer', 'Backend &amp; Product Engineer', 'more than ten years', 'Python and FastAPI product work', 'PHP and Laravel systems'] as $copy) {
             $response->assertSee($copy, false);
         }
     }

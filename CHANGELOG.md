@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Program 004
+
+- Kept Senior PHP / Laravel Engineer as the primary identity and added Backend & Product Engineer as the secondary position.
+- Added restrained, verified Python, FastAPI, React, TypeScript, and PostgreSQL product-development evidence through BuildIQ.
+- Corrected BuildIQ’s implementation stack across project metadata, architecture evidence, homepage, About page, resume, tests, and structured data.
+- Updated the ATS-friendly two-page resume and retained theme-independent print output.
+
 ### Program 002
 
 - Replaced provisional identity and chronology with verified professional facts.
