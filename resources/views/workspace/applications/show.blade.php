@@ -5,7 +5,12 @@
     @if(in_array($application->status,['preparing_application','needs_user_input']))
         <x-workspace.callout tone="info" title="Application preparation"><p>This package is still being prepared. Review every answer and resolve user-input requests before moving it to final review.</p></x-workspace.callout>
     @endif
-    <x-workspace.callout tone="warning" title="Final approval is exact and revocable" class="approval-warning"><p>Approving authorizes the exact displayed application package for submission. Any later change invalidates approval.</p></x-workspace.callout>
+    @if(in_array($application->status,['withdrawn','closed']))
+        <x-workspace.callout tone="danger" title="Application closed by candidate"><p>This opportunity was rejected and the application is no longer eligible for submission.</p><p><strong>Reason:</strong> {{ match($application->rejection_reason) { 'remote_policy_mismatch' => 'Remote policy does not match requirements', 'weak_fit' => 'Weak fit', 'company_concern' => 'Company concern', 'unrelated_stack' => 'Unrelated technology stack', default => str($application->rejection_reason ?: 'Not recorded')->replace('_',' ')->title() } }}</p>@if($application->rejection_note)<p>{{ $application->rejection_note }}</p>@endif</x-workspace.callout>
+    @endif
+    @unless(in_array($application->status,['withdrawn','closed']))
+        <x-workspace.callout tone="warning" title="Final approval is exact and revocable" class="approval-warning"><p>Approving authorizes the exact displayed application package for submission. Any later change invalidates approval.</p></x-workspace.callout>
+    @endunless
 
     <div class="review-grid">
         <div>
@@ -48,7 +53,12 @@
                     <button class="button button--primary button--full" type="submit" @disabled($blockedReasons) @if($blockedReasons) aria-describedby="approval-blockers" @endif>{{ $blockedReasons ? 'Resolve blockers before approval' : 'Approve exact package for submission' }}</button>
                 </form></section>
             @endif
-            <section class="workspace-card"><h2>Return or reject</h2><form method="post" action="{{ route('workspace.applications.decision',$application) }}">@csrf<div class="form-field"><label for="decision-note">Review note <span>Optional</span></label><textarea id="decision-note" name="note" rows="3"></textarea></div><div class="action-stack"><button class="button button--secondary button--full" type="submit" name="action" value="request_changes">Request changes</button><button class="button button--secondary button--full" type="submit" name="action" value="return_to_preparation">Return to preparation</button><button class="button button--danger button--full" type="submit" name="action" value="reject">Reject and close application</button></div></form></section>
+            @if(in_array($application->status,['preparing_application','needs_user_input','ready_for_final_review','submission_failed']))
+                <section class="workspace-card"><h2>Return to preparation</h2><form method="post" action="{{ route('workspace.applications.decision',$application) }}">@csrf<div class="form-field"><label for="decision-note">Review note <span>Optional</span></label><textarea id="decision-note" name="note" rows="3"></textarea></div><div class="action-stack"><button class="button button--secondary button--full" type="submit" name="action" value="request_changes">Request changes</button><button class="button button--secondary button--full" type="submit" name="action" value="return_to_preparation">Return to preparation</button></div></form></section>
+            @endif
+            @unless(in_array($application->status,['withdrawn','closed']))
+                <section class="workspace-card"><h2>Reject opportunity</h2><p>Rejecting withdraws this application and permanently blocks submission approval. Prepared documents remain private and are not deleted.</p><form method="post" action="{{ route('workspace.applications.decision',$application) }}">@csrf<input type="hidden" name="action" value="reject"><div class="form-field"><label for="rejection-reason">Rejection reason</label><select id="rejection-reason" name="rejection_reason" required><option value="">Select a reason</option><option value="remote_policy_mismatch">Remote policy does not match requirements</option><option value="compensation">Compensation</option><option value="location">Location</option><option value="weak_fit">Weak fit</option><option value="company_concern">Company concern</option><option value="unrelated_stack">Unrelated technology stack</option><option value="other">Other</option></select></div><div class="form-field"><label for="rejection-note">Rejection note <span>Optional</span></label><textarea id="rejection-note" name="note" rows="4" placeholder="Remote work is limited to 30 days per year, which does not match my fully remote requirement."></textarea></div><button class="button button--danger button--full" type="submit">Reject and close application</button></form></section>
+            @endunless
         </aside>
     </div>
 </x-workspace.layout>

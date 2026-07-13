@@ -13,7 +13,7 @@ class JobApplication extends Model
 
     protected function casts(): array
     {
-        return ['application_answers' => 'encrypted:array', 'attachments' => 'encrypted:array', 'unresolved_questions' => 'encrypted:array', 'approved_document_hashes' => 'array', 'submitted_document_hashes' => 'array', 'confirmation_email_expected' => 'boolean', 'approved_at' => 'datetime', 'submitted_at' => 'datetime', 'next_follow_up_date' => 'date'];
+        return ['application_answers' => 'encrypted:array', 'attachments' => 'encrypted:array', 'unresolved_questions' => 'encrypted:array', 'rejection_note' => 'encrypted', 'approved_document_hashes' => 'array', 'submitted_document_hashes' => 'array', 'confirmation_email_expected' => 'boolean', 'approved_at' => 'datetime', 'rejected_at' => 'datetime', 'submitted_at' => 'datetime', 'next_follow_up_date' => 'date'];
     }
 
     public function opportunity()

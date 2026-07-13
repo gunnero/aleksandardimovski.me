@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Workspace;
 
 use App\Http\Controllers\Controller;
+use App\Models\AgentActivity;
 use App\Models\JobApplication;
+use App\Models\OpportunityReviewHistory;
 use App\Services\Jobs\ApplicationApproval;
 use App\Services\Workspace\StateTransitions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ApplicationController extends Controller
 {
@@ -49,10 +52,50 @@ class ApplicationController extends Controller
     public function decision(Request $r, JobApplication $application, StateTransitions $transitions)
     {
         $this->owned($r, $application);
-        $d = $r->validate(['action' => 'required|in:request_changes,reject,return_to_preparation', 'note' => 'nullable|string|max:2000']);
-        $target = $d['action'] === 'reject' ? 'closed' : 'preparing_application';
-        $transitions->application($application, $target);
-        $application->forceFill(['status' => $target, 'preparation_notes' => $d['note'] ?? $application->preparation_notes, 'approved_by' => null, 'approved_at' => null, 'approved_application_hash' => null, 'approved_document_hashes' => null])->save();
+        $d = $r->validate([
+            'action' => 'required|in:request_changes,reject,return_to_preparation',
+            'rejection_reason' => 'nullable|required_if:action,reject|in:remote_policy_mismatch,compensation,location,weak_fit,company_concern,unrelated_stack,other',
+            'note' => 'nullable|string|max:2000',
+        ]);
+        if ($d['action'] === 'reject') {
+            DB::transaction(function () use ($r, $application, $transitions, $d): void {
+                $application->loadMissing('opportunity');
+                $opportunity = $application->opportunity;
+                $oldJobStatus = $opportunity->review_status;
+                $oldApplicationStatus = $application->status;
+                $transitions->job($opportunity, 'rejected');
+                $transitions->application($application, 'withdrawn');
+                $rejectedAt = now();
+                $opportunity->forceFill([
+                    'review_status' => 'rejected', 'rejection_reason' => $d['rejection_reason'], 'review_notes' => $d['note'] ?? null,
+                    'reviewed_by' => $r->user()->id, 'reviewed_at' => $rejectedAt,
+                ])->save();
+                $application->forceFill([
+                    'status' => 'withdrawn', 'rejection_reason' => $d['rejection_reason'], 'rejection_note' => $d['note'] ?? null,
+                    'rejected_by' => $r->user()->id, 'rejected_at' => $rejectedAt,
+                    'approved_by' => null, 'approved_at' => null, 'approved_application_hash' => null, 'approved_document_hashes' => null,
+                    'submitted_document_hashes' => null, 'submitted_answers_hash' => null,
+                ])->save();
+                OpportunityReviewHistory::create([
+                    'job_opportunity_id' => $opportunity->id, 'reviewed_by' => $r->user()->id,
+                    'old_status' => $oldJobStatus, 'new_status' => 'rejected', 'rejection_reason' => $d['rejection_reason'],
+                    'review_note' => $d['note'] ?? null, 'action' => 'candidate_rejection', 'reviewed_at' => $rejectedAt,
+                ]);
+                AgentActivity::create([
+                    'user_id' => $r->user()->id, 'job_opportunity_id' => $opportunity->id, 'job_application_id' => $application->id,
+                    'event_type' => 'application_withdrawn_by_candidate', 'agent_source' => 'workspace',
+                    'metadata' => ['application_from' => $oldApplicationStatus, 'application_to' => 'withdrawn', 'opportunity_from' => $oldJobStatus, 'opportunity_to' => 'rejected', 'reason' => $d['rejection_reason']],
+                    'occurred_at' => $rejectedAt,
+                ]);
+            });
+
+            return redirect()->route('workspace.jobs.rejected')->with('status', 'Opportunity rejected and linked application withdrawn. No submission can be approved.');
+        }
+
+        if ($application->status !== 'preparing_application') {
+            $transitions->application($application, 'preparing_application');
+        }
+        $application->forceFill(['status' => 'preparing_application', 'preparation_notes' => $d['note'] ?? $application->preparation_notes, 'approved_by' => null, 'approved_at' => null, 'approved_application_hash' => null, 'approved_document_hashes' => null])->save();
 
         return back()->with('status', 'Application returned without submission approval.');
     }
