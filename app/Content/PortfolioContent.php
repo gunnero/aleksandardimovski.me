@@ -10,7 +10,7 @@ final class PortfolioContent
 
     private const PROJECT_EVIDENCE_FIELDS = ['executive_summary', 'architecture', 'production', 'roadmap', 'diagram'];
 
-    private const ARTICLE_FIELDS = ['slug', 'title', 'description', 'published_at', 'reading_time', 'status', 'body'];
+    private const ARTICLE_FIELDS = ['slug', 'title', 'description', 'published_at', 'modified_at', 'reading_time', 'category', 'keywords', 'status', 'body'];
 
     public function projects(): array
     {
@@ -31,7 +31,7 @@ final class PortfolioContent
 
     public function articles(bool $includeDrafts = false): array
     {
-        return collect(config('portfolio.articles'))
+        return collect(config('articles'))
             ->when(! $includeDrafts, fn ($items) => $items->where('status', 'published'))
             ->map(fn (array $article) => Arr::only($article, self::ARTICLE_FIELDS))->all();
     }
