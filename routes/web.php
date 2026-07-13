@@ -6,7 +6,9 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Workspace\ApplicationController;
 use App\Http\Controllers\Workspace\CandidateProfileController;
 use App\Http\Controllers\Workspace\JobInboxController;
+use App\Http\Controllers\Workspace\PreferenceRuleController;
 use App\Http\Controllers\Workspace\PrivateDocumentController;
+use App\Models\AgentActivity;
 use App\Models\JobApplication;
 use App\Models\JobOpportunity;
 use Illuminate\Http\Request;
@@ -54,6 +56,13 @@ Route::prefix('workspace')->name('workspace.')->middleware(['auth', 'verified', 
                 'rejected' => (clone $jobs)->rejected()->count(), 'expired' => (clone $jobs)->expired()->count(),
             ],
             'applicationCount' => JobApplication::where('user_id', $request->user()->id)->count(),
+            'workflowCounts' => [
+                'excluded' => AgentActivity::where('user_id', $request->user()->id)->where('event_type', 'job_excluded_by_preferences')->where('occurred_at', '>=', now()->startOfWeek())->count(),
+                'research' => (clone $jobs)->where('preference_decision', 'needs_research')->count(),
+                'preparing' => JobApplication::where('user_id', $request->user()->id)->where('status', 'preparing_application')->count(),
+                'ready' => JobApplication::where('user_id', $request->user()->id)->where('status', 'ready_for_final_review')->count(),
+                'submitted' => JobApplication::where('user_id', $request->user()->id)->where('submitted_at', '>=', now()->startOfWeek())->count(),
+            ],
             'recentApplications' => JobApplication::where('user_id', $request->user()->id)->with('opportunity')->latest()->limit(8)->get(),
         ]);
     })->name('dashboard');
@@ -66,6 +75,10 @@ Route::prefix('workspace')->name('workspace.')->middleware(['auth', 'verified', 
     })->name('logout');
     Route::get('/profile', [CandidateProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [CandidateProfileController::class, 'update'])->name('profile.update');
+    Route::get('/preferences', [PreferenceRuleController::class, 'index'])->name('preferences.index');
+    Route::patch('/preferences/{rule}', [PreferenceRuleController::class, 'update'])->name('preferences.update');
+    Route::delete('/preferences/{rule}', [PreferenceRuleController::class, 'destroy'])->name('preferences.destroy');
+    Route::get('/preferences/{rule}/affected-jobs', [PreferenceRuleController::class, 'affected'])->name('preferences.affected');
     Route::get('/jobs', [JobInboxController::class, 'index'])->name('jobs.index');
     Route::get('/jobs/approved', [JobInboxController::class, 'approved'])->name('jobs.approved');
     Route::get('/jobs/rejected', [JobInboxController::class, 'rejected'])->name('jobs.rejected');

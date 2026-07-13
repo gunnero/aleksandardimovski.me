@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Workspace;
 use App\Http\Controllers\Controller;
 use App\Models\AgentActivity;
 use App\Models\JobApplication;
+use App\Models\JobPreferenceRule;
 use App\Models\OpportunityReviewHistory;
 use App\Services\Jobs\ApplicationApproval;
 use App\Services\Workspace\StateTransitions;
@@ -56,6 +57,10 @@ class ApplicationController extends Controller
             'action' => 'required|in:request_changes,reject,return_to_preparation',
             'rejection_reason' => 'nullable|required_if:action,reject|in:remote_policy_mismatch,compensation,location,weak_fit,company_concern,unrelated_stack,other',
             'note' => 'nullable|string|max:2000',
+            'use_as_rule' => 'nullable|boolean',
+            'rule_severity' => 'nullable|required_if:use_as_rule,1|in:hard_exclusion,strong_penalty,soft_penalty,job_only',
+            'rule_scope' => 'nullable|required_if:use_as_rule,1|in:all_jobs,role_family,company,source',
+            'confirm_hard_rule' => 'nullable|accepted_if:rule_severity,hard_exclusion',
         ]);
         if ($d['action'] === 'reject') {
             DB::transaction(function () use ($r, $application, $transitions, $d): void {
@@ -79,11 +84,20 @@ class ApplicationController extends Controller
                     'approved_by' => null, 'approved_at' => null, 'approved_application_hash' => null, 'approved_document_hashes' => null,
                     'submitted_document_hashes' => null, 'submitted_answers_hash' => null,
                 ])->save();
-                OpportunityReviewHistory::create([
+                $history = OpportunityReviewHistory::create([
                     'job_opportunity_id' => $opportunity->id, 'reviewed_by' => $r->user()->id,
                     'old_status' => $oldJobStatus, 'new_status' => 'rejected', 'rejection_reason' => $d['rejection_reason'],
                     'review_note' => $d['note'] ?? null, 'action' => 'candidate_rejection', 'reviewed_at' => $rejectedAt,
                 ]);
+                if ($r->boolean('use_as_rule') && ($d['rule_severity'] ?? 'job_only') !== 'job_only') {
+                    $mapping = $this->ruleFromRejection($d['rejection_reason'], $d['note'] ?? null, $opportunity, $d['rule_scope'], $d['rule_severity']);
+                    $rule = new JobPreferenceRule([
+                        'source_job_opportunity_id' => $opportunity->id, 'source_review_history_id' => $history->id,
+                        'confirmed_at' => $rejectedAt, 'active' => true, 'confidence' => 1, ...$mapping,
+                    ]);
+                    $rule->user_id = $r->user()->id;
+                    $rule->save();
+                }
                 AgentActivity::create([
                     'user_id' => $r->user()->id, 'job_opportunity_id' => $opportunity->id, 'job_application_id' => $application->id,
                     'event_type' => 'application_closed_by_candidate', 'agent_source' => 'workspace',
@@ -106,5 +120,19 @@ class ApplicationController extends Controller
     private function owned(Request $r, JobApplication $a): void
     {
         abort_unless($a->user_id === $r->user()->id, 404);
+    }
+
+    private function ruleFromRejection(string $reason, ?string $note, $job, string $scope, string $severity): array
+    {
+        $scopeValue = match ($scope) {
+            'company' => $job->company_name, 'role_family' => $job->role_title, 'source' => $job->source, default => null
+        };
+        if ($reason === 'remote_policy_mismatch') {
+            return ['rule_type' => 'remote_policy', 'rule_key' => 'annual_remote_limit', 'operator' => 'contains_any', 'comparison_value_json' => ['values' => ['hybrid', 'office attendance', 'days per year', 'annual remote days', 'limited remote'], 'scope_value' => $scopeValue], 'severity' => $severity, 'scope' => $scope, 'reason' => $note ?: 'Roles requiring regular office attendance or limiting remote work to fixed annual remote days.'];
+        }
+
+        return ['rule_type' => match ($reason) {
+            'compensation' => 'salary', 'location' => 'geography', 'unrelated_stack' => 'technology', default => 'other'
+        }, 'rule_key' => 'job_text', 'operator' => 'contains_any', 'comparison_value_json' => ['values' => [$job->role_title], 'scope_value' => $scopeValue], 'severity' => $severity, 'scope' => $scope, 'reason' => $note ?: 'Reusable preference learned from an explicitly confirmed rejection.'];
     }
 }

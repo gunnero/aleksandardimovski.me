@@ -24,6 +24,7 @@
             <a @class(['is-current' => request()->routeIs('workspace.jobs.rejected')]) href="{{ route('workspace.jobs.rejected') }}">Rejected</a>
             <a @class(['is-current' => request()->routeIs('workspace.jobs.all') || request()->routeIs('workspace.jobs.duplicates') || request()->routeIs('workspace.jobs.expired')]) href="{{ route('workspace.jobs.all') }}">All</a>
             <a @class(['is-current' => request()->routeIs('workspace.profile.*')]) href="{{ route('workspace.profile.show') }}">Candidate profile</a>
+            <a @class(['is-current' => request()->routeIs('workspace.preferences.*')]) href="{{ route('workspace.preferences.index') }}">Preferences</a>
             <a href="{{ route('workspace.dashboard') }}#applications">Applications</a>
         </nav>
         <button class="button button--quiet theme-toggle" type="button" data-theme-toggle aria-pressed="false">Use dark theme</button>

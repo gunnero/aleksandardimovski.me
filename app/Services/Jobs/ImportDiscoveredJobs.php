@@ -15,9 +15,11 @@ final class ImportDiscoveredJobs
 {
     private const ALLOWED = ['company_name', 'role_title', 'original_url', 'source', 'external_job_id', 'posting_date', 'application_deadline', 'remote_scope', 'location', 'employment_type', 'salary_min', 'salary_max', 'salary_currency', 'salary_period', 'technology_stack_json', 'required_experience_json', 'preferred_experience_json', 'job_description', 'company_summary', 'source_verified_at', 'source_status', 'location_eligibility', 'international_contracting', 'fit_score', 'technical_fit_score', 'seniority_fit_score', 'remote_fit_score', 'compensation_fit_score', 'product_fit_score', 'evidence_fit_score', 'application_effort_score', 'strengths_json', 'gaps_json', 'risks_json', 'salary_recommendation', 'review_status', 'review_notes', 'discovered_by'];
 
+    public function __construct(private readonly PreferenceRuleEvaluator $rules) {}
+
     public function import(User $user, array $records, bool $dryRun = false): array
     {
-        $report = ['total' => count($records), 'created' => 0, 'duplicates' => 0, 'warnings' => 0, 'invalid' => 0, 'dry_run' => $dryRun, 'items' => []];
+        $report = ['total' => count($records), 'created' => 0, 'excluded' => 0, 'duplicates' => 0, 'warnings' => 0, 'invalid' => 0, 'dry_run' => $dryRun, 'items' => []];
         foreach ($records as $index => $input) {
             try {
                 if (! is_array($input) || array_diff(array_keys($input), self::ALLOWED)) {
@@ -55,20 +57,38 @@ final class ImportDiscoveredJobs
                     }
                 }
                 $report['warnings'] += count($warnings);
+                $evaluation = $this->rules->evaluate($user, $data);
+                if ($evaluation['decision'] === 'excluded') {
+                    $report['excluded']++;
+                    $report['items'][] = ['index' => $index, 'status' => 'excluded', 'url' => $data['normalized_url'], ...$evaluation];
+                    if (! $dryRun) {
+                        AgentActivity::create(['user_id' => $user->id, 'event_type' => 'job_excluded_by_preferences', 'agent_source' => 'discovery_import', 'metadata' => ['rule_ids' => collect($evaluation['evaluations'])->pluck('preference_rule_id')->values()->all()], 'occurred_at' => now()]);
+                    }
+
+                    continue;
+                }
+                $data['base_fit_score'] = $evaluation['base_fit_score'];
+                $data['preference_adjustment'] = $evaluation['preference_adjustment'];
+                $data['fit_score'] = $evaluation['final_fit_score'];
+                $data['preference_decision'] = $evaluation['decision'];
+                if ($evaluation['decision'] === 'needs_research') {
+                    $data['review_status'] = 'needs_research';
+                }
                 if (! $dryRun) {
-                    DB::transaction(function () use ($user, $data): void {
-                        $job = new JobOpportunity(Arr::only($data, [...self::ALLOWED, 'normalized_url', 'normalized_url_hash']));
+                    DB::transaction(function () use ($user, $data, $evaluation): void {
+                        $job = new JobOpportunity(Arr::only($data, [...self::ALLOWED, 'normalized_url', 'normalized_url_hash', 'base_fit_score', 'preference_adjustment', 'preference_decision']));
                         $job->user_id = $user->id;
                         $job->normalized_url = $data['normalized_url'];
                         $job->discovered_at = now();
                         $job->review_status = $data['review_status'] ?? 'needs_review';
                         $job->discovered_by = $data['discovered_by'] ?? 'codex';
                         $job->save();
+                        $job->ruleEvaluations()->createMany($evaluation['evaluations']);
                         AgentActivity::create(['user_id' => $user->id, 'job_opportunity_id' => $job->id, 'event_type' => 'record_imported', 'agent_source' => $job->discovered_by, 'metadata' => ['source' => $job->source], 'occurred_at' => now()]);
                     });
                 }
                 $report['created']++;
-                $report['items'][] = ['index' => $index, 'status' => $dryRun ? 'would_create' : 'created', 'url' => $data['normalized_url'], 'warnings' => $warnings];
+                $report['items'][] = ['index' => $index, 'status' => $dryRun ? 'would_create' : 'created', 'url' => $data['normalized_url'], 'warnings' => $warnings, ...$evaluation];
             } catch (ValidationException $e) {
                 $report['invalid']++;
                 $report['items'][] = ['index' => $index, 'status' => 'invalid', 'errors' => $e->errors()];

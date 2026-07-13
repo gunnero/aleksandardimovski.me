@@ -33,3 +33,21 @@ document.addEventListener('submit', (event) => {
     const form = event.target.closest('form[data-confirm]');
     if (form && !window.confirm(form.dataset.confirm)) event.preventDefault();
 });
+
+document.querySelectorAll('[data-rejection-rule]').forEach((form) => {
+    const useRule = form.querySelector('[data-use-rule]');
+    const fields = form.querySelector('[data-rule-fields]');
+    const severity = form.querySelector('[data-rule-severity]');
+    const preview = form.querySelector('[data-rule-preview]');
+    const hardConfirm = form.querySelector('[data-hard-confirm]');
+    const refresh = () => {
+        fields.hidden = !useRule.checked;
+        hardConfirm.hidden = severity.value !== 'hard_exclusion';
+        preview.textContent = severity.value === 'hard_exclusion'
+            ? 'Hard exclusion: matching future jobs in this scope will be excluded with a stored explanation.'
+            : 'Matching future jobs will receive the selected preference penalty and a stored explanation.';
+    };
+    useRule.addEventListener('change', refresh);
+    severity.addEventListener('change', refresh);
+    refresh();
+});
