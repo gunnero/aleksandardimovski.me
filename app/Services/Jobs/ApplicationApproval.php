@@ -25,7 +25,7 @@ final class ApplicationApproval
             }
         }
 
-return $out;
+        return $out;
     }
 
     public function approve(JobApplication $a, User $user, ?string $note): void
