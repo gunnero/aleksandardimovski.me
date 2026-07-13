@@ -27,6 +27,6 @@ class ResumePrintTest extends TestCase
 
         $this->assertStringNotContainsString("@import './print.css';", $css);
         $this->assertSame(0, substr_count($css, '@media print'));
-        $this->assertStringContainsString("'resources/css/app.css', 'resources/css/print.css', 'resources/js/app.js'", $layout);
+        $this->assertStringContainsString("'resources/css/app.css', 'resources/css/linkedin.css', 'resources/css/print.css', 'resources/js/app.js'", $layout);
     }
 }

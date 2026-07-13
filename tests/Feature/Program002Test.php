@@ -11,10 +11,10 @@ class Program002Test extends TestCase
         $this->get('/resume')->assertOk()->assertSee('aleksandar.dimovski@me.com')->assertSee('+389 75 458 790')->assertSee('Bitola 7000, North Macedonia')->assertSee('Founder &amp; Lead Software Engineer', false)->assertSee('November 2018 – January 2025')->assertSee('github.com/gunnero');
     }
 
-    public function test_no_linkedin_or_unsupported_commercial_claims_exist(): void
+    public function test_only_verified_linkedin_and_no_unsupported_commercial_claims_exist(): void
     {
         $content = collect(['config', 'resources/views'])->flatMap(fn ($path) => glob(base_path($path.'/**/*.*')) ?: [])->filter(fn ($file) => is_file($file))->map(fn ($file) => file_get_contents($file))->implode("\n");
-        $this->assertStringNotContainsStringIgnoringCase('linkedin', $content);
+        $this->assertSame('https://www.linkedin.com/in/dimovskialeksandar/', config('portfolio.linkedin_url'));
         foreach (['customer count', 'user count', 'revenue generated'] as $claim) {
             $this->assertStringNotContainsStringIgnoringCase($claim, $content);
         }

@@ -75,10 +75,12 @@ class Program006Test extends TestCase
             $html = $this->get('/articles/'.$article['slug'])->assertOk()->getContent();
             preg_match_all('/<script type="application\/ld\+json">(.*?)<\/script>/s', $html, $matches);
             $schemas = array_map(fn ($json) => json_decode(trim($json), true, flags: JSON_THROW_ON_ERROR), $matches[1]);
-            $this->assertNotNull(collect($schemas)->firstWhere('@type', 'Article'));
+            $articleSchema = collect($schemas)->firstWhere('@type', 'Article');
+            $this->assertNotNull($articleSchema);
+            $this->assertArrayNotHasKey('sameAs', $articleSchema['author']);
             $this->assertStringContainsString('<link rel="canonical" href="'.url('/articles/'.$article['slug']).'">', $html);
 
-            foreach (['LinkedIn', '/home/', ' ssh ', 'customer count', 'revenue of', 'years of Python'] as $forbidden) {
+            foreach (['/home/', ' ssh ', 'customer count', 'revenue of', 'years of Python'] as $forbidden) {
                 $this->assertStringNotContainsStringIgnoringCase($forbidden, $html);
             }
         }

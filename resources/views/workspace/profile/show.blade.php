@@ -1,4 +1,4 @@
-@php($fields = ['full_name','professional_email','phone','location','timezone','portfolio_url','github_url','primary_title','secondary_title','professional_summary','salary_minimum','salary_target','salary_currency','salary_period','notice_period','availability','remote_preference','employment_preference','work_authorization_notes'])
+@php($fields = ['full_name','professional_email','phone','location','timezone','portfolio_url','github_url','linkedin_url','primary_title','secondary_title','professional_summary','salary_minimum','salary_target','salary_currency','salary_period','notice_period','availability','remote_preference','employment_preference','work_authorization_notes'])
 <x-workspace.layout title="Candidate profile" heading="Candidate profile">
     <x-slot:description>Verified portfolio facts and clearly marked information that still requires your confirmation.</x-slot:description>
     <x-workspace.callout tone="warning" title="Facts stay within verified boundaries"><p>Legal, authorization, availability, salary, visa, reference, notice-period, and start-date answers are never inferred.</p></x-workspace.callout>

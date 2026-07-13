@@ -50,7 +50,7 @@ class Program004Test extends TestCase
         foreach (['November 2018 – January 2025', '2026 – Present', 'Senior PHP Developer / Server Administrator', 'aleksandar.dimovski@me.com', '+389 75 458 790', 'Bitola 7000, North Macedonia'] as $fact) {
             $resume->assertSee($fact);
         }
-        $resume->assertDontSee('LinkedIn');
+        $resume->assertSee('linkedin.com/in/dimovskialeksandar');
         $resume->assertDontSee('Date of birth');
         $resume->assertDontSee('Nationality');
     }

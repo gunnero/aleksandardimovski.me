@@ -14,10 +14,10 @@
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <script>document.documentElement.dataset.theme=localStorage.getItem('theme')||((matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light')</script>
-    @vite(['resources/css/app.css', 'resources/css/print.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/css/linkedin.css', 'resources/css/print.css', 'resources/js/app.js'])
     @if($article)@vite('resources/js/article.js')@endif
     @php
-        $personSchema = ['@context' => 'https://schema.org', '@type' => 'Person', 'name' => 'Aleksandar Dimovski', 'url' => config('app.url'), 'jobTitle' => ['Senior PHP / Laravel Engineer', 'Backend & Product Engineer'], 'description' => 'Senior PHP / Laravel Engineer, Backend & Product Engineer, and Founder & Lead Software Engineer at Kalveri', 'email' => config('portfolio.email'), 'telephone' => config('portfolio.phone'), 'address' => ['@type' => 'PostalAddress', 'addressLocality' => 'Bitola', 'postalCode' => '7000', 'addressCountry' => 'MK'], 'worksFor' => ['@type' => 'Organization', 'name' => 'Kalveri'], 'sameAs' => [config('portfolio.github')]];
+        $personSchema = ['@context' => 'https://schema.org', '@type' => 'Person', 'name' => 'Aleksandar Dimovski', 'url' => config('app.url'), 'jobTitle' => ['Senior PHP / Laravel Engineer', 'Backend & Product Engineer'], 'description' => 'Senior PHP / Laravel Engineer, Backend & Product Engineer, and Founder & Lead Software Engineer at Kalveri', 'email' => config('portfolio.email'), 'telephone' => config('portfolio.phone'), 'address' => ['@type' => 'PostalAddress', 'addressLocality' => 'Bitola', 'postalCode' => '7000', 'addressCountry' => 'MK'], 'worksFor' => ['@type' => 'Organization', 'name' => 'Kalveri'], 'sameAs' => [config('portfolio.github'), config('portfolio.linkedin_url')]];
         $websiteSchema = ['@context' => 'https://schema.org', '@type' => 'WebSite', 'name' => 'Aleksandar Dimovski', 'url' => config('app.url')];
         $jsonFlags = JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
     @endphp
