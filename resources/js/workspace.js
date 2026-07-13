@@ -22,3 +22,9 @@ toggle?.addEventListener('click', () => {
 });
 
 document.querySelector('.validation-summary')?.focus();
+
+const workspaceNavigation = document.querySelector('.workspace-nav');
+const revealNavigationItem = (item) => item?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+
+workspaceNavigation?.addEventListener('focusin', (event) => revealNavigationItem(event.target.closest('a')));
+revealNavigationItem(workspaceNavigation?.querySelector('.is-current'));

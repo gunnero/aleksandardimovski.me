@@ -143,6 +143,11 @@ class Program008Test extends TestCase
         $this->assertStringContainsString('.field-row{grid-template-columns:1fr', $css);
         $this->assertStringContainsString('.button{width:100%', $css);
         $this->assertStringContainsString('.sticky-action-bar{position:static}', $css);
+        $this->assertStringContainsString('scrollbar-width:thin', $css);
+        $this->assertStringContainsString('scroll-padding-inline:12px', $css);
+        $workspaceJavascript = file_get_contents(resource_path('js/workspace.js'));
+        $this->assertStringContainsString("addEventListener('focusin'", $workspaceJavascript);
+        $this->assertStringContainsString("querySelector('.is-current')", $workspaceJavascript);
         foreach (['action-bar', 'breadcrumb', 'button', 'callout', 'card', 'data-list', 'empty-value', 'field-row', 'status-badge', 'validation-summary'] as $component) {
             $this->assertFileExists(resource_path("views/components/workspace/{$component}.blade.php"));
         }
