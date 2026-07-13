@@ -1,0 +1,65 @@
+name: Bug report
+description: Report a reproducible problem with the portfolio website.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Please do not include credentials, personal data, or sensitive production information.
+  - type: input
+    id: affected-page
+    attributes:
+      label: Affected page
+      description: Provide the public URL or page name.
+      placeholder: https://aleksandardimovski.me/...
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      description: What happened instead?
+    validations:
+      required: true
+  - type: input
+    id: browser-device
+    attributes:
+      label: Browser and device
+      description: Include browser version, operating system, and device type when relevant.
+      placeholder: Safari 18, macOS, desktop
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Reproduction steps
+      description: List the smallest reliable sequence that demonstrates the problem.
+      placeholder: |
+        1. Open ...
+        2. Select ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Add redacted screenshots or recordings if they help explain the problem.
+  - type: textarea
+    id: accessibility-impact
+    attributes:
+      label: Accessibility impact
+      description: Describe any keyboard, screen-reader, contrast, motion, zoom, or other accessibility impact.
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other non-sensitive details that may help reproduce the issue.
