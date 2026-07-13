@@ -67,7 +67,8 @@ class Program0083Test extends TestCase
             $this->assertNull($application->{$field});
         }
         $this->actingAs($owner)->get(route('workspace.jobs.approved'))->assertDontSee($job->role_title);
-        $this->actingAs($owner)->get(route('workspace.jobs.rejected'))->assertSee($job->role_title);
+        $this->actingAs($owner)->get(route('workspace.jobs.rejected'))->assertSee($job->role_title)
+            ->assertSee('Remote policy does not match requirements')->assertDontSee('Remote Policy Mismatch');
         $this->actingAs($owner)->get(route('workspace.dashboard'))->assertSee($job->role_title)->assertSee('Withdrawn');
         $this->actingAs($owner)->get(route('workspace.applications.show', $application))->assertOk()
             ->assertSee('Application closed by candidate')->assertSee('Remote policy does not match requirements')
@@ -104,7 +105,9 @@ class Program0083Test extends TestCase
         ])->assertForbidden();
         $this->actingAs($owner)->get(route('workspace.applications.show', $application))->assertOk()
             ->assertSee('name="_token"', false)->assertSee('name="rejection_reason"', false)
-            ->assertSee('Remote policy does not match requirements')->assertSee('required', false);
+            ->assertSee('Remote policy does not match requirements')->assertSee('Compensation mismatch')
+            ->assertSee('Location or timezone mismatch')->assertSee('Role no longer suitable')
+            ->assertSee('Company concern')->assertSee('Other')->assertSee('required', false);
         $this->assertSame('approved_for_preparation', $job->fresh()->review_status);
     }
 
