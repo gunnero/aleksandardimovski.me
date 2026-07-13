@@ -1,8 +1,6 @@
 name: Content correction
 description: Report inaccurate or outdated public portfolio content.
 title: "[Content]: "
-labels:
-  - content
 body:
   - type: input
     id: affected-content
