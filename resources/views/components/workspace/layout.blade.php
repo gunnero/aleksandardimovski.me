@@ -17,10 +17,14 @@
         <a class="workspace-brand" href="{{ route('workspace.dashboard') }}"><span>Private workspace</span><strong>Job Search</strong></a>
         <nav class="workspace-nav" aria-label="Workspace navigation">
             <a @class(['is-current' => request()->routeIs('workspace.dashboard')]) href="{{ route('workspace.dashboard') }}">Dashboard</a>
-            <a @class(['is-current' => request()->routeIs('workspace.jobs.*')]) href="{{ route('workspace.jobs.index') }}">Job inbox</a>
+            <a @class(['is-current' => request()->routeIs('workspace.jobs.index') || request()->routeIs('workspace.jobs.show')]) href="{{ route('workspace.jobs.index') }}">Inbox</a>
+            <a @class(['is-current' => request()->routeIs('workspace.jobs.approved')]) href="{{ route('workspace.jobs.approved') }}">Approved</a>
+            <a @class(['is-current' => request()->routeIs('workspace.jobs.saved')]) href="{{ route('workspace.jobs.saved') }}">Saved</a>
+            <a @class(['is-current' => request()->routeIs('workspace.jobs.research')]) href="{{ route('workspace.jobs.research') }}">Research</a>
+            <a @class(['is-current' => request()->routeIs('workspace.jobs.rejected')]) href="{{ route('workspace.jobs.rejected') }}">Rejected</a>
+            <a @class(['is-current' => request()->routeIs('workspace.jobs.all') || request()->routeIs('workspace.jobs.duplicates') || request()->routeIs('workspace.jobs.expired')]) href="{{ route('workspace.jobs.all') }}">All</a>
             <a @class(['is-current' => request()->routeIs('workspace.profile.*')]) href="{{ route('workspace.profile.show') }}">Candidate profile</a>
             <a href="{{ route('workspace.dashboard') }}#applications">Applications</a>
-            <a href="{{ route('workspace.dashboard') }}#follow-ups">Follow-ups</a>
         </nav>
         <button class="button button--quiet theme-toggle" type="button" data-theme-toggle aria-pressed="false">Use dark theme</button>
         <form class="workspace-signout" method="post" action="{{ route('workspace.logout') }}">@csrf<button class="button button--quiet" type="submit">Sign out</button></form>

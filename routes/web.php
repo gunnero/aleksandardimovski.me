@@ -45,8 +45,14 @@ Route::middleware('guest')->group(function (): void {
 });
 Route::prefix('workspace')->name('workspace.')->middleware(['auth', 'verified', 'workspace.owner'])->group(function (): void {
     Route::get('/', function (Request $request) {
+        $jobs = JobOpportunity::where('user_id', $request->user()->id);
+
         return view('workspace.dashboard.index', [
-            'jobCount' => JobOpportunity::where('user_id', $request->user()->id)->count(),
+            'jobCounts' => [
+                'inbox' => (clone $jobs)->pendingReview()->count(), 'approved' => (clone $jobs)->approved()->count(),
+                'saved' => (clone $jobs)->saved()->count(), 'research' => (clone $jobs)->needsResearch()->count(),
+                'rejected' => (clone $jobs)->rejected()->count(), 'expired' => (clone $jobs)->expired()->count(),
+            ],
             'applicationCount' => JobApplication::where('user_id', $request->user()->id)->count(),
             'recentApplications' => JobApplication::where('user_id', $request->user()->id)->with('opportunity')->latest()->limit(8)->get(),
         ]);
@@ -61,8 +67,16 @@ Route::prefix('workspace')->name('workspace.')->middleware(['auth', 'verified', 
     Route::get('/profile', [CandidateProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [CandidateProfileController::class, 'update'])->name('profile.update');
     Route::get('/jobs', [JobInboxController::class, 'index'])->name('jobs.index');
+    Route::get('/jobs/approved', [JobInboxController::class, 'approved'])->name('jobs.approved');
+    Route::get('/jobs/rejected', [JobInboxController::class, 'rejected'])->name('jobs.rejected');
+    Route::get('/jobs/saved', [JobInboxController::class, 'saved'])->name('jobs.saved');
+    Route::get('/jobs/research', [JobInboxController::class, 'research'])->name('jobs.research');
+    Route::get('/jobs/duplicates', [JobInboxController::class, 'duplicates'])->name('jobs.duplicates');
+    Route::get('/jobs/expired', [JobInboxController::class, 'expired'])->name('jobs.expired');
+    Route::get('/jobs/all', [JobInboxController::class, 'all'])->name('jobs.all');
     Route::get('/jobs/{job}', [JobInboxController::class, 'show'])->name('jobs.show');
     Route::patch('/jobs/{job}/review', [JobInboxController::class, 'review'])->name('jobs.review');
+    Route::patch('/jobs/{job}/restore', [JobInboxController::class, 'restore'])->name('jobs.restore');
     Route::get('/applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');
     Route::post('/applications/{application}/approve-submission', [ApplicationController::class, 'approve'])->name('applications.approve');
     Route::post('/applications/{application}/decision', [ApplicationController::class, 'decision'])->name('applications.decision');

@@ -1,36 +1,42 @@
-<x-workspace.layout title="Job inbox" heading="Job discovery inbox">
-    <x-slot:description>Compare fit evidence, risks, and eligibility before approving any application preparation.</x-slot:description>
+<x-workspace.layout :title="$title" :heading="$title">
+    <x-slot:description>{{ $description }}</x-slot:description>
+
+    <nav class="status-subnav" aria-label="Opportunity status views">
+        @foreach([
+            ['inbox','Inbox','workspace.jobs.index'], ['approved','Approved','workspace.jobs.approved'], ['saved','Saved','workspace.jobs.saved'],
+            ['research','Research','workspace.jobs.research'], ['rejected','Rejected','workspace.jobs.rejected'], ['all','All','workspace.jobs.all'],
+        ] as [$key,$label,$route])
+            <a @class(['is-current' => $view === $key]) href="{{ route($route) }}">{{ $label }}</a>
+        @endforeach
+        <details class="status-subnav__more"><summary>More statuses</summary><div><a href="{{ route('workspace.jobs.duplicates') }}">Duplicates</a><a href="{{ route('workspace.jobs.expired') }}">Expired</a></div></details>
+    </nav>
+
+    <form class="filter-bar" method="get">
+        <div class="form-field"><label for="q">Search company or role</label><input id="q" name="q" value="{{ request('q') }}" maxlength="200"></div>
+        <div class="form-field"><label for="sort">Sort</label><select id="sort" name="sort">
+            @foreach(['newest'=>'Newest discovered','oldest'=>'Oldest discovered','highest_fit'=>'Highest fit','lowest_fit'=>'Lowest fit','recently_reviewed'=>'Most recently reviewed','company'=>'Company','role'=>'Role'] as $value=>$label)<option value="{{ $value }}" @selected(request('sort','newest')===$value)>{{ $label }}</option>@endforeach
+        </select></div>
+        <button class="button button--secondary" type="submit">Apply</button>
+        @if(request()->query())<a class="button button--quiet" href="{{ url()->current() }}">Clear</a>@endif
+        @if($view === 'all')
+            <details class="advanced-filters"><summary>Advanced filters</summary><div class="advanced-filters__grid">
+                <div class="form-field"><label for="status">Status</label><select id="status" name="status"><option value="">Every status</option>@foreach(['discovered','needs_review','approved_for_preparation','rejected','saved_for_later','needs_research','duplicate','expired'] as $status)<option value="{{ $status }}" @selected(request('status')===$status)>{{ str($status)->replace('_',' ')->title() }}</option>@endforeach</select></div>
+                @foreach(['company'=>'Company','role'=>'Role','source'=>'Source','remote_scope'=>'Remote scope'] as $name=>$label)<div class="form-field"><label for="{{ $name }}">{{ $label }}</label><input id="{{ $name }}" name="{{ $name }}" value="{{ request($name) }}"></div>@endforeach
+                <div class="form-field"><label for="fit_min">Minimum fit</label><input id="fit_min" name="fit_min" type="number" min="0" max="100" value="{{ request('fit_min') }}"></div>
+                <div class="form-field"><label for="fit_max">Maximum fit</label><input id="fit_max" name="fit_max" type="number" min="0" max="100" value="{{ request('fit_max') }}"></div>
+                @foreach(['discovered_from'=>'Discovered from','discovered_to'=>'Discovered to','reviewed_from'=>'Reviewed from','reviewed_to'=>'Reviewed to'] as $name=>$label)<div class="form-field"><label for="{{ $name }}">{{ $label }}</label><input id="{{ $name }}" name="{{ $name }}" type="date" value="{{ request($name) }}"></div>@endforeach
+            </div></details>
+        @endif
+    </form>
+
+    <p class="result-count"><strong>{{ $jobs->total() }}</strong> {{ str('opportunity')->plural($jobs->total()) }}</p>
     <div class="inbox-list">
-    @forelse($jobs as $job)
-        <article class="opportunity-card">
-            <header class="opportunity-card__header">
-                <div><p class="company-name">{{ $job->company_name }}</p><h2><a href="{{ route('workspace.jobs.show',$job) }}">{{ $job->role_title }}</a></h2></div>
-                <div class="badge-group"><x-workspace.status-badge :status="$job->source_status" /><x-workspace.status-badge :status="$job->review_status" /></div>
-            </header>
-            <div class="opportunity-summary">
-                <div class="score"><strong>{{ $job->fit_score ?? '—' }}</strong><span>Fit score</span></div>
-                <dl class="data-list data-list--compact">
-                    <x-workspace.field-row label="Salary">@if($job->salary_min || $job->salary_max){{ $job->salary_min ?: '—' }}–{{ $job->salary_max ?: '—' }} {{ $job->salary_currency }}{{ $job->salary_period ? '/'.$job->salary_period : '' }}@else<x-workspace.empty-value label="Not listed" />@endif</x-workspace.field-row>
-                    <x-workspace.field-row label="Remote eligibility">{{ $job->location_eligibility ?: ($job->remote_scope ?: 'User confirmation required') }}</x-workspace.field-row>
-                    <x-workspace.field-row label="Source">{{ $job->source ?: 'Unknown source' }}</x-workspace.field-row>
-                    <x-workspace.field-row label="Deadline">{{ $job->application_deadline?->toDateString() ?? 'No deadline listed' }}</x-workspace.field-row>
-                </dl>
-            </div>
-            <div class="evidence-grid">
-                <section><h3>Strongest matches</h3>@if($job->strengths_json)<ul>@foreach($job->strengths_json as $item)<li>{{ $item }}</li>@endforeach</ul>@else<x-workspace.empty-value label="No strengths scored" />@endif</section>
-                <section><h3>Important gaps</h3>@if($job->gaps_json)<ul>@foreach($job->gaps_json as $item)<li>{{ $item }}</li>@endforeach</ul>@else<x-workspace.empty-value label="No gaps recorded" />@endif</section>
-                <section class="risk-list"><h3>Risks</h3>@if($job->risks_json)<ul>@foreach($job->risks_json as $item)<li>{{ $item }}</li>@endforeach</ul>@else<x-workspace.empty-value label="No risks recorded" />@endif</section>
-            </div>
-            <div class="opportunity-links"><a href="{{ route('workspace.jobs.show',$job) }}">Review opportunity details</a><a href="{{ $job->original_url }}" rel="noreferrer noopener" target="_blank">Open original posting</a>@if($job->application)<a href="{{ route('workspace.applications.show',$job->application) }}">Open application</a>@endif</div>
-            <form class="decision-form" method="post" action="{{ route('workspace.jobs.review',$job) }}">@csrf @method('patch')
-                <div class="form-grid"><div class="form-field"><label for="action-{{ $job->id }}">Review decision</label><select id="action-{{ $job->id }}" name="action"><option value="approved_for_preparation">Approve for preparation</option><option value="rejected">Reject</option><option value="saved_for_later">Save for later</option><option value="needs_research">Request more research</option><option value="duplicate">Mark duplicate</option><option value="expired">Mark expired</option></select></div><div class="form-field"><label for="reason-{{ $job->id }}">Rejection reason</label><select id="reason-{{ $job->id }}" name="rejection_reason"><option value="">Not applicable</option>@foreach(['compensation','location','weak_fit','company_concern','duplicate','expired','unrelated_stack','other'] as $reason)<option value="{{ $reason }}">{{ str($reason)->replace('_',' ')->title() }}</option>@endforeach</select></div></div>
-                <div class="form-field"><label for="note-{{ $job->id }}">Review note <span>Optional</span></label><textarea id="note-{{ $job->id }}" name="note" rows="3"></textarea></div>
-                <x-workspace.action-bar><x-workspace.button type="submit">Save review decision</x-workspace.button></x-workspace.action-bar>
-            </form>
-        </article>
-    @empty
-        <section class="empty-state empty-state--large"><h2>No discovered jobs</h2><p>Imported opportunities will appear here for private review.</p></section>
-    @endforelse
+        @forelse($jobs as $job)
+            @include('workspace.jobs.partials.card', ['job' => $job, 'view' => $view])
+        @empty
+            @if($view === 'inbox')<section class="empty-state empty-state--large"><h2>Inbox clear</h2><p>No opportunities are currently waiting for review.</p></section>
+            @else<section class="empty-state empty-state--large"><h2>No matching opportunities</h2><p>Try another search or return to the Job Inbox.</p><a class="button button--secondary" href="{{ route('workspace.jobs.index') }}">Open Job Inbox</a></section>@endif
+        @endforelse
     </div>
     <div class="pagination">{{ $jobs->links() }}</div>
 </x-workspace.layout>
