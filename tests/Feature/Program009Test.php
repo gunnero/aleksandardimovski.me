@@ -13,6 +13,7 @@ use App\Services\Jobs\ImportDiscoveredJobs;
 use App\Services\Jobs\SubmissionGuard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class Program009Test extends TestCase
@@ -66,6 +67,17 @@ class Program009Test extends TestCase
         $this->assertStringContainsString('Excluded by confirmed remote_policy rule', $limited['items'][0]['evaluations'][0]['explanation']);
         $this->assertSame(0, $fully['excluded']);
         $this->assertSame('would_create', $fully['items'][0]['status']);
+
+        foreach (['Hybrid required with two office days weekly', 'Recurring office attendance every month', 'Office-first arrangement'] as $index => $policy) {
+            $result = $service->import($owner, [$this->record('restricted-'.$index, $policy)], true);
+            $this->assertSame('excluded', $result['items'][0]['decision']);
+        }
+        foreach (['Fully remote with optional office access', 'Fully remote with occasional voluntary company events'] as $index => $policy) {
+            $result = $service->import($owner, [$this->record('optional-'.$index, $policy)], true);
+            $this->assertSame('would_create', $result['items'][0]['status']);
+        }
+        $ambiguous = $service->import($owner, [$this->record('ambiguous', 'Remote arrangement discussed during interview')], true);
+        $this->assertSame('needs_research', $ambiguous['items'][0]['decision']);
     }
 
     public function test_penalties_adjust_final_score_and_inactive_expired_rules_do_not_apply(): void
@@ -76,7 +88,7 @@ class Program009Test extends TestCase
         $inactive->update(['active' => false]);
         $expired = $this->rule($owner, 'strong_penalty');
         $expired->update(['expires_at' => now()->subMinute()]);
-        $report = app(ImportDiscoveredJobs::class)->import($owner, [$this->record('score', 'Hybrid role', 90)], true);
+        $report = app(ImportDiscoveredJobs::class)->import($owner, [$this->record('score', 'Hybrid required', 90)], true);
         $this->assertSame(-8, $report['items'][0]['preference_adjustment']);
         $this->assertSame(82, $report['items'][0]['final_fit_score']);
     }
@@ -86,7 +98,7 @@ class Program009Test extends TestCase
         $owner = $this->owner();
         $rule = $this->rule($owner, 'soft_penalty');
         $rule->update(['scope' => 'company', 'comparison_value_json' => ['values' => ['hybrid'], 'scope_value' => 'Matched Ltd']]);
-        $records = [$this->record('other', 'Hybrid role', 80), [...$this->record('matched', 'Hybrid role', 80), 'company_name' => 'Matched Ltd']];
+        $records = [$this->record('other', 'Hybrid required', 80), [...$this->record('matched', 'Hybrid required', 80), 'company_name' => 'Matched Ltd']];
         $report = app(ImportDiscoveredJobs::class)->import($owner, $records);
         $this->assertSame(2, $report['created']);
         $this->assertSame(0, JobOpportunity::where('company_name', 'Synthetic Ltd')->value('preference_adjustment'));
@@ -97,7 +109,7 @@ class Program009Test extends TestCase
     public function test_submission_guard_requires_current_approval_and_stops_runtime_challenges(): void
     {
         [$owner, , $application] = $this->application();
-        $application->forceFill(['status' => 'ready_for_final_review', 'application_answers' => ['name' => 'Synthetic Candidate']])->save();
+        $application->forceFill(['status' => 'ready_for_final_review', 'application_answers' => ['name' => 'Synthetic Candidate'], 'work_authorization_answer' => 'User-confirmed synthetic answer'])->save();
         app(ApplicationApproval::class)->approve($application, $owner, null);
         $this->assertTrue(app(SubmissionGuard::class)->ready($application->fresh()));
         $blockers = app(SubmissionGuard::class)->blockers($application->fresh(), ['captcha' => true, 'mfa' => true, 'ambiguous_legal_consent' => true]);
@@ -117,7 +129,12 @@ class Program009Test extends TestCase
         $this->assertFalse($guard->readyForFinalReview($application));
         $job->location_eligibility = 'North Macedonia eligible';
         $job->save();
-        $application->fill(['tailored_cv_path' => 'private/cv.pdf', 'cover_letter_path' => 'private/letter.pdf', 'application_answers' => ['name' => 'Synthetic Candidate'], 'salary_answer' => 'Within approved range', 'preparation_notes' => 'Synthetic role research and interview preparation.'])->save();
+        $cv = "job-applications/{$application->id}/synthetic-cv.pdf";
+        $letter = "job-applications/{$application->id}/synthetic-letter.pdf";
+        Storage::disk('local')->put($cv, 'synthetic cv');
+        Storage::disk('local')->put($letter, 'synthetic cover letter');
+        $application->fill(['tailored_cv_path' => $cv, 'cover_letter_path' => $letter, 'application_answers' => ['name' => 'Synthetic Candidate'], 'salary_answer' => 'Within approved range', 'preparation_notes' => 'Synthetic role research and interview preparation.'])->save();
+        ApplicationQuestion::create(['job_application_id' => $application->id, 'question' => 'Why this synthetic role?', 'answer' => 'Synthetic answer', 'confirmed_at' => now()]);
         $this->assertTrue($guard->readyForFinalReview($application->fresh()));
         $job->review_status = 'rejected';
         $job->save();
@@ -132,6 +149,22 @@ class Program009Test extends TestCase
         $this->get(route('workspace.preferences.index'))->assertRedirect(route('workspace.login'));
         $this->actingAs($other)->patch(route('workspace.preferences.update', $rule), ['severity' => 'soft_penalty'])->assertForbidden();
         $this->get(route('sitemap'))->assertOk()->assertDontSee('/workspace/preferences');
+    }
+
+    public function test_unconfirmed_deleted_and_edited_rules_take_effect_immediately(): void
+    {
+        $owner = $this->owner();
+        $rule = $this->rule($owner, 'hard_exclusion');
+        $rule->update(['confirmed_at' => null]);
+        $record = $this->record('lifecycle', 'Hybrid required', 80);
+        $this->assertSame(0, app(ImportDiscoveredJobs::class)->import($owner, [$record], true)['excluded']);
+
+        $rule->update(['confirmed_at' => now(), 'severity' => 'soft_penalty']);
+        $this->assertSame(-8, app(ImportDiscoveredJobs::class)->import($owner, [$record], true)['items'][0]['preference_adjustment']);
+        $rule->update(['scope' => 'company', 'comparison_value_json' => ['values' => ['hybrid required'], 'scope_value' => 'Different Company']]);
+        $this->assertSame(0, app(ImportDiscoveredJobs::class)->import($owner, [$record], true)['items'][0]['preference_adjustment']);
+        $rule->delete();
+        $this->assertSame(0, app(ImportDiscoveredJobs::class)->import($owner, [$record], true)['items'][0]['preference_adjustment']);
     }
 
     private function rule(User $owner, string $severity): JobPreferenceRule

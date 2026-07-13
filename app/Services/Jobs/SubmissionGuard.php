@@ -25,6 +25,9 @@ final class SubmissionGuard
         if ($application->questions->where('legal_or_sensitive', true)->whereNull('confirmed_at')->isNotEmpty()) {
             $blockers[] = 'A legal or sensitive declaration remains unresolved.';
         }
+        if (blank($application->work_authorization_answer)) {
+            $blockers[] = 'The work-authorization answer requires explicit user confirmation.';
+        }
         if ($application->accountTasks->whereNotIn('verification_status', ['not_required', 'verified', 'complete'])->isNotEmpty()) {
             $blockers[] = 'Account or email verification is incomplete.';
         }

@@ -1,6 +1,6 @@
 # Program 009 discovery workflow
 
-This workflow discovers candidates; it never approves, prepares, creates accounts, or submits applications.
+This workflow discovers candidates; it never approves, prepares, creates accounts, or submits applications. The complete authority and stop-condition contract is in `docs/program-009-safety-contract.md`.
 
 1. Find 10–20 current Senior PHP/Laravel/backend/product-engineering opportunities on employer-controlled pages. Require remote Europe, EMEA, or global eligibility and evidence that North Macedonia or international contracting is supported.
 2. Reject expired, hybrid, office-required, limited-remote-day, junior, WordPress-only, scraped-only, geographically ineligible, and duplicate listings before creating the validated JSON file.

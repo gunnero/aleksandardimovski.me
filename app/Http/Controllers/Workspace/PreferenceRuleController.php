@@ -11,8 +11,14 @@ class PreferenceRuleController extends Controller
     public function index(Request $request)
     {
         $rules = JobPreferenceRule::where('user_id', $request->user()->id)->withCount('evaluations')->latest()->get();
+        $ruleCounts = [
+            'hard' => $rules->where('active', true)->where('severity', 'hard_exclusion')->whereNotNull('confirmed_at')->count(),
+            'penalties' => $rules->where('active', true)->whereIn('severity', ['strong_penalty', 'soft_penalty'])->whereNotNull('confirmed_at')->count(),
+            'confirmation' => $rules->whereNull('confirmed_at')->count(),
+            'disabled' => $rules->where('active', false)->count(),
+        ];
 
-        return view('workspace.preferences.index', compact('rules'));
+        return view('workspace.preferences.index', compact('rules', 'ruleCounts'));
     }
 
     public function update(Request $request, JobPreferenceRule $rule)

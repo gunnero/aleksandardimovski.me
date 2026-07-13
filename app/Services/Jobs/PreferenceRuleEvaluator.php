@@ -48,6 +48,10 @@ final class PreferenceRuleEvaluator
         $values = is_array($expected) ? ($expected['values'] ?? $expected['value'] ?? $expected) : [$expected];
         $values = is_array($values) ? $values : [$values];
 
+        if ($rule->rule_type === 'remote_policy' && $rule->rule_key === 'annual_remote_limit') {
+            return $this->matchesRestrictedRemotePolicy((string) $actual);
+        }
+
         return match ($rule->operator) {
             'contains_any' => collect($values)->contains(fn ($value) => Str::contains(Str::lower((string) $actual), Str::lower((string) $value))),
             'not_contains_any' => ! collect($values)->contains(fn ($value) => Str::contains(Str::lower((string) $actual), Str::lower((string) $value))),
@@ -73,7 +77,25 @@ final class PreferenceRuleEvaluator
 
     private function unclearEligibility(array $job): bool
     {
-        return in_array(Str::lower((string) ($job['location_eligibility'] ?? '')), ['', 'unknown', 'unclear', 'needs research'], true);
+        $location = Str::lower((string) ($job['location_eligibility'] ?? ''));
+        $remote = Str::lower(trim((string) ($job['remote_scope'] ?? '')));
+        $remoteIsClear = Str::contains($remote, ['fully remote', '100% remote', 'remote-first']) || $this->matchesRestrictedRemotePolicy($remote);
+
+        return in_array($location, ['', 'unknown', 'unclear', 'needs research'], true)
+            || ! $remoteIsClear;
+    }
+
+    private function matchesRestrictedRemotePolicy(string $policy): bool
+    {
+        $policy = Str::lower($policy);
+        if (Str::contains($policy, ['optional office', 'office access is optional', 'voluntary office', 'voluntary company event', 'optional company event'])) {
+            return false;
+        }
+
+        return Str::contains($policy, ['hybrid required', 'hybrid requirement', 'hybrid-only', 'office-first', 'limited remote', 'annual remote days'])
+            || preg_match('/\bremote\s+(?:work\s+)?(?:is\s+)?limited\s+to\s+\d+\s+days?\s+per\s+year\b/', $policy) === 1
+            || preg_match('/\b(?:regular|recurring|required|mandatory)\s+office\s+attendance\b/', $policy) === 1
+            || preg_match('/\boffice\s+attendance\s+(?:is\s+)?(?:regular|required|mandatory)\b/', $policy) === 1;
     }
 
     private function explanation(JobPreferenceRule $rule): string

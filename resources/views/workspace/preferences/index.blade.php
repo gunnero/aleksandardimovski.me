@@ -1,8 +1,14 @@
 <x-workspace.layout title="Preferences" heading="Job preferences">
     <x-slot:description>Confirmed rules used to explain discovery exclusions and score adjustments.</x-slot:description>
+    <section class="metric-grid metric-grid--status" aria-label="Preference rule totals">
+        @foreach([['hard','Active hard exclusions'],['penalties','Active penalties'],['confirmation','Rules requiring confirmation'],['disabled','Disabled rules']] as [$key,$label])
+            <div class="metric"><strong>{{ $ruleCounts[$key] }}</strong><span>{{ $label }}</span></div>
+        @endforeach
+    </section>
     <x-workspace.callout tone="info" title="Rules remain under your control"><p>Hard exclusions apply only after explicit confirmation. Disable, expire, edit, or delete any reusable rule here.</p></x-workspace.callout>
     @forelse($rules as $rule)
         <x-workspace.card :title="str($rule->rule_type)->replace('_',' ')->title()">
+            <div class="badge-group"><x-workspace.status-badge :status="$rule->severity" /><x-workspace.status-badge :status="$rule->scope" /><x-workspace.status-badge :status="$rule->confirmed_at ? ($rule->active ? 'active' : 'disabled') : 'confirmation_required'" /></div>
             <form method="post" action="{{ route('workspace.preferences.update',$rule) }}">@csrf @method('patch')
                 <div class="form-grid"><div class="form-field"><label for="severity-{{ $rule->id }}">Severity</label><select id="severity-{{ $rule->id }}" name="severity"><option value="hard_exclusion" @selected($rule->severity==='hard_exclusion')>Hard exclusion</option><option value="strong_penalty" @selected($rule->severity==='strong_penalty')>Strong penalty</option><option value="soft_penalty" @selected($rule->severity==='soft_penalty')>Soft penalty</option><option value="informational" @selected($rule->severity==='informational')>Informational</option></select></div><div class="form-field"><label for="scope-{{ $rule->id }}">Scope</label><select id="scope-{{ $rule->id }}" name="scope">@foreach(['all_jobs'=>'All jobs','role_family'=>'Similar roles','company'=>'This company','source'=>'This source','country'=>'Country','technology'=>'Technology'] as $value=>$label)<option value="{{ $value }}" @selected($rule->scope===$value)>{{ $label }}</option>@endforeach</select></div></div>
                 <div class="form-field"><label for="reason-{{ $rule->id }}">Rule explanation</label><textarea id="reason-{{ $rule->id }}" name="reason" required>{{ $rule->reason }}</textarea></div>
