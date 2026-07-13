@@ -63,15 +63,18 @@ class ApplicationController extends Controller
                 $opportunity = $application->opportunity;
                 $oldJobStatus = $opportunity->review_status;
                 $oldApplicationStatus = $application->status;
+                $newApplicationStatus = in_array($oldApplicationStatus, ['withdrawn', 'closed'], true) ? $oldApplicationStatus : 'withdrawn';
                 $transitions->job($opportunity, 'rejected');
-                $transitions->application($application, 'withdrawn');
+                if ($newApplicationStatus !== $oldApplicationStatus) {
+                    $transitions->application($application, $newApplicationStatus);
+                }
                 $rejectedAt = now();
                 $opportunity->forceFill([
                     'review_status' => 'rejected', 'rejection_reason' => $d['rejection_reason'], 'review_notes' => $d['note'] ?? null,
                     'reviewed_by' => $r->user()->id, 'reviewed_at' => $rejectedAt,
                 ])->save();
                 $application->forceFill([
-                    'status' => 'withdrawn', 'rejection_reason' => $d['rejection_reason'], 'rejection_note' => $d['note'] ?? null,
+                    'status' => $newApplicationStatus, 'rejection_reason' => $d['rejection_reason'], 'rejection_note' => $d['note'] ?? null,
                     'rejected_by' => $r->user()->id, 'rejected_at' => $rejectedAt,
                     'approved_by' => null, 'approved_at' => null, 'approved_application_hash' => null, 'approved_document_hashes' => null,
                     'submitted_document_hashes' => null, 'submitted_answers_hash' => null,
@@ -83,13 +86,13 @@ class ApplicationController extends Controller
                 ]);
                 AgentActivity::create([
                     'user_id' => $r->user()->id, 'job_opportunity_id' => $opportunity->id, 'job_application_id' => $application->id,
-                    'event_type' => 'application_withdrawn_by_candidate', 'agent_source' => 'workspace',
-                    'metadata' => ['application_from' => $oldApplicationStatus, 'application_to' => 'withdrawn', 'opportunity_from' => $oldJobStatus, 'opportunity_to' => 'rejected', 'reason' => $d['rejection_reason']],
+                    'event_type' => 'application_closed_by_candidate', 'agent_source' => 'workspace',
+                    'metadata' => ['application_from' => $oldApplicationStatus, 'application_to' => $newApplicationStatus, 'opportunity_from' => $oldJobStatus, 'opportunity_to' => 'rejected', 'reason' => $d['rejection_reason']],
                     'occurred_at' => $rejectedAt,
                 ]);
             });
 
-            return redirect()->route('workspace.jobs.rejected')->with('status', 'Opportunity rejected and linked application withdrawn. No submission can be approved.');
+            return redirect()->route('workspace.jobs.rejected')->with('status', 'Opportunity rejected and linked application closed. No submission can be approved.');
         }
 
         if ($application->status !== 'preparing_application') {

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\AgentActivity;
 use App\Models\JobApplication;
 use App\Models\JobOpportunity;
 use App\Models\OpportunityReviewHistory;
@@ -109,6 +110,24 @@ class Program0083Test extends TestCase
             ->assertSee('Location or timezone mismatch')->assertSee('Role no longer suitable')
             ->assertSee('Company concern')->assertSee('Other')->assertSee('required', false);
         $this->assertSame('approved_for_preparation', $job->fresh()->review_status);
+    }
+
+    public function test_rejection_keeps_an_already_closed_application_closed(): void
+    {
+        [$owner, $job, $application] = $this->approvedApplication('closed');
+
+        $this->actingAs($owner)->get(route('workspace.applications.show', $application))->assertOk()
+            ->assertSee('Application already closed')->assertSee('Reject and close application');
+        $this->actingAs($owner)->post(route('workspace.applications.decision', $application), [
+            'action' => 'reject', 'rejection_reason' => 'remote_policy_mismatch', 'note' => 'Candidate decision.',
+        ])->assertRedirect(route('workspace.jobs.rejected'));
+
+        $this->assertSame('rejected', $job->fresh()->review_status);
+        $this->assertSame('closed', $application->fresh()->status);
+        $activity = AgentActivity::where('job_application_id', $application->id)->latest('id')->firstOrFail();
+        $this->assertSame('closed', $activity->metadata['application_to']);
+        $this->actingAs($owner)->get(route('workspace.applications.show', $application))->assertOk()
+            ->assertSee('Application closed by candidate')->assertDontSee('Reject and close application');
     }
 
     private function approvedApplication(string $applicationStatus = 'preparing_application'): array
