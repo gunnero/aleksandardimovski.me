@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('action', 64)->default('decision');
             $table->timestamp('reviewed_at');
             $table->timestamps();
-            $table->index(['job_opportunity_id', 'reviewed_at']);
+            $table->index(['job_opportunity_id', 'reviewed_at'], 'review_history_job_reviewed_idx');
         });
     }
 
