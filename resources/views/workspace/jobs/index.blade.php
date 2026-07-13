@@ -1,16 +1,6 @@
 <x-workspace.layout :title="$title" :heading="$title">
     <x-slot:description>{{ $description }}</x-slot:description>
 
-    <nav class="status-subnav" aria-label="Opportunity status views">
-        @foreach([
-            ['inbox','Inbox','workspace.jobs.index'], ['approved','Approved','workspace.jobs.approved'], ['saved','Saved','workspace.jobs.saved'],
-            ['research','Research','workspace.jobs.research'], ['rejected','Rejected','workspace.jobs.rejected'], ['all','All','workspace.jobs.all'],
-        ] as [$key,$label,$route])
-            <a @class(['is-current' => $view === $key]) href="{{ route($route) }}">{{ $label }}</a>
-        @endforeach
-        <details class="status-subnav__more"><summary>More statuses</summary><div><a href="{{ route('workspace.jobs.duplicates') }}">Duplicates</a><a href="{{ route('workspace.jobs.expired') }}">Expired</a></div></details>
-    </nav>
-
     <form class="filter-bar" method="get">
         <div class="form-field"><label for="q">Search company or role</label><input id="q" name="q" value="{{ request('q') }}" maxlength="200"></div>
         <div class="form-field"><label for="sort">Sort</label><select id="sort" name="sort">

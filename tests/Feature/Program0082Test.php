@@ -108,13 +108,13 @@ class Program0082Test extends TestCase
             ->assertOk()->assertSee('Company 01')->assertDontSee('Company 16')->assertSee('page=2', false);
     }
 
-    public function test_empty_inbox_and_mobile_safe_status_navigation_are_present(): void
+    public function test_empty_inbox_and_mobile_safe_workspace_navigation_are_present(): void
     {
         $user = $this->owner();
         $this->actingAs($user)->get(route('workspace.jobs.index'))->assertOk()->assertSee('Inbox clear')->assertSee('No opportunities are currently waiting for review.');
         $css = file_get_contents(resource_path('css/workspace.css'));
-        $this->assertStringContainsString('.status-subnav{display:flex', $css);
         $this->assertStringContainsString('overflow-x:auto', $css);
+        $this->assertStringContainsString('overscroll-behavior-inline:contain', $css);
         $this->assertStringContainsString('.metric-grid--status,.advanced-filters__grid{grid-template-columns:1fr}', $css);
         $this->assertStringContainsString('form[data-confirm]', file_get_contents(resource_path('js/workspace.js')));
     }
