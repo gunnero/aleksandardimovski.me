@@ -9,6 +9,11 @@
             <a class="metric" href="{{ route($route) }}"><strong>{{ $jobCounts[$key] }}</strong><span>{{ $label }}</span></a>
         @endforeach
     </section>
+    <section class="metric-grid metric-grid--status" aria-label="Preference and application workflow totals">
+        @foreach([['excluded','Jobs excluded by preferences'],['research','Jobs needing research'],['preparing','Approved jobs preparing'],['ready','Ready for final review'],['submitted','Submitted this week']] as [$key,$label])
+            <div class="metric"><strong>{{ $workflowCounts[$key] }}</strong><span>{{ $label }}</span></div>
+        @endforeach
+    </section>
     <x-workspace.card id="applications" title="Applications and submission history">
         @forelse($recentApplications as $application)
             <a class="history-row" href="{{ route('workspace.applications.show',$application) }}"><span><strong>{{ $application->opportunity->role_title }}</strong><small>{{ $application->opportunity->company_name }}</small></span><x-workspace.status-badge :status="$application->status" /></a>

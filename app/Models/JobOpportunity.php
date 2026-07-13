@@ -24,6 +24,11 @@ class JobOpportunity extends Model
         return $this->hasMany(OpportunityReviewHistory::class)->latest('reviewed_at');
     }
 
+    public function ruleEvaluations()
+    {
+        return $this->hasMany(JobRuleEvaluation::class);
+    }
+
     public function scopePendingReview(Builder $query): Builder
     {
         return $query->whereIn('review_status', ['discovered', 'needs_review']);
