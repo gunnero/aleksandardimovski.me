@@ -1,6 +1,6 @@
 # AleksandarDimovski.me
 
-Production-oriented personal portfolio for Aleksandar Dimovski, positioned as a Senior PHP / Laravel Engineer and Product Engineer.
+Production-oriented personal portfolio for Aleksandar Dimovski, positioned as a Senior PHP / Laravel Engineer and Backend & Product Engineer. The identity keeps long-term PHP, Laravel, SQL, and Linux experience primary while documenting current Python, FastAPI, React, TypeScript, and PostgreSQL product work through BuildIQ.
 
 ## Stack
 
@@ -35,6 +35,8 @@ npm audit
 Project and article records live in `config/portfolio.php`. Rendering passes through `App\Content\PortfolioContent`, which allowlists public fields. Draft articles are excluded from public routes. Add only information approved for public disclosure.
 
 Verified resume facts live in `config/resume.php`; `docs/008-resume-source-of-truth.md` defines what is verified, derived, omitted, and confidential. The HTML resume is the source for the final PDF.
+
+Technology-experience boundaries are defined in `docs/013-technology-experience-boundaries.md` so current product work is not presented as long-term commercial employment.
 
 ## Production build and deployment
 

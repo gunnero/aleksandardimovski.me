@@ -4,6 +4,8 @@
 
 The canonical facts are stored in `config/resume.php` and `config/portfolio.php`: name, titles, email, phone, Bitola location, GitHub, portfolio, Macedonian and English proficiency, IT Academy Alexandria training, the supplied employment dates/titles, the five-company support scope at S/N Insurance Broker, and the selected certification group.
 
+Program 004 adds a verified distinction between long-term professional PHP/Laravel experience and current Python/FastAPI/React/TypeScript/PostgreSQL product development through BuildIQ. It does not establish years of Python experience or a separate Python employment role. `docs/013-technology-experience-boundaries.md` is the wording guardrail for future resume changes.
+
 IT Academy Alexandria is placed under Education and Training because the verified description is primarily a training program with early practical experience, not conventional long-term employment.
 
 ## Derived wording
