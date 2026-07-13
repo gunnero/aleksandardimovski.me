@@ -14,7 +14,7 @@ final class StateTransitions
         'needs_review' => ['approved_for_preparation', 'rejected', 'saved_for_later', 'needs_research', 'duplicate', 'expired'],
         'saved_for_later' => ['needs_review', 'approved_for_preparation', 'rejected', 'expired'],
         'needs_research' => ['needs_review', 'approved_for_preparation', 'rejected', 'saved_for_later', 'duplicate', 'expired'],
-        'approved_for_preparation' => ['expired'], 'rejected' => ['needs_review'], 'duplicate' => ['needs_review'], 'expired' => ['needs_review'],
+        'approved_for_preparation' => ['rejected', 'expired'], 'rejected' => ['needs_review'], 'duplicate' => ['needs_review'], 'expired' => ['needs_review'],
     ];
 
     private const APPLICATION = [
