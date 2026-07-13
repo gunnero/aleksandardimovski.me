@@ -34,6 +34,8 @@ npm audit
 
 Project records live in `config/portfolio.php`. Article records live in `config/articles.php`, with long-form Markdown in `resources/content/articles`. Rendering passes through `App\Content\PortfolioContent`, which allowlists public fields. Draft articles are excluded from public routes and the sitemap. Add only information approved for public disclosure and follow `docs/015-editorial-style-guide.md` and `docs/016-article-fact-boundaries.md`.
 
+Article layout, callouts, navigation, related-reading selection, table-of-contents behavior, and accessibility requirements are documented in `docs/018-article-component-guide.md`.
+
 Verified resume facts live in `config/resume.php`; `docs/008-resume-source-of-truth.md` defines what is verified, derived, omitted, and confidential. The HTML resume is the source for the final PDF.
 
 Technology-experience boundaries are defined in `docs/013-technology-experience-boundaries.md` so current product work is not presented as long-term commercial employment.

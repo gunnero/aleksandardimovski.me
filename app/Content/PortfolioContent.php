@@ -10,7 +10,7 @@ final class PortfolioContent
 
     private const PROJECT_EVIDENCE_FIELDS = ['executive_summary', 'architecture', 'production', 'roadmap', 'diagram'];
 
-    private const ARTICLE_FIELDS = ['slug', 'title', 'description', 'published_at', 'modified_at', 'reading_time', 'category', 'keywords', 'status', 'body'];
+    private const ARTICLE_FIELDS = ['slug', 'title', 'description', 'published_at', 'modified_at', 'reading_time', 'category', 'keywords', 'related_slugs', 'status', 'body'];
 
     public function projects(): array
     {
