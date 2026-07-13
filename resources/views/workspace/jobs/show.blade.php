@@ -6,6 +6,11 @@
             <x-workspace.card title="Opportunity overview"><x-workspace.status-badge :status="$job->review_status" /><dl class="data-list"><x-workspace.field-row label="Fit score">{{ $job->fit_score !== null ? $job->fit_score.'/100' : 'Not scored' }}</x-workspace.field-row><x-workspace.field-row label="Location">{{ $job->location_eligibility ?: ($job->remote_scope ?: 'User confirmation required') }}</x-workspace.field-row><x-workspace.field-row label="Source"><span>{{ $job->source }}</span> <x-workspace.status-badge :status="$job->source_status" /></x-workspace.field-row><x-workspace.field-row label="Deadline">{{ $job->application_deadline?->toDateString() ?? 'No deadline listed' }}</x-workspace.field-row></dl></x-workspace.card>
             <x-workspace.card title="Company summary"><p>{{ $job->company_summary ?: 'No company summary prepared.' }}</p></x-workspace.card>
             <x-workspace.card title="Role description"><div class="prose">{{ $job->job_description ?: 'No role description prepared.' }}</div></x-workspace.card>
+            <x-workspace.card title="Review history">
+                @forelse($job->reviewHistory as $history)
+                    <div class="history-row"><span><strong>{{ $history->action === 'restore' ? 'Restored to inbox' : 'Review decision' }}</strong><small>{{ str($history->old_status)->replace('_',' ')->title() }} → {{ str($history->new_status)->replace('_',' ')->title() }} · {{ $history->reviewed_at->format('M j, Y H:i') }}</small>@if($history->review_note)<small>{{ $history->review_note }}</small>@endif</span></div>
+                @empty<div class="empty-state"><h3>No review history yet</h3><p>This opportunity is still waiting for its first decision.</p></div>@endforelse
+            </x-workspace.card>
         </div>
         <aside><x-workspace.card title="Source verification"><p>The original posting opens outside this private workspace.</p><a class="button button--secondary button--full" href="{{ $job->original_url }}" rel="noopener noreferrer" target="_blank">Open original posting</a></x-workspace.card></aside>
     </div>

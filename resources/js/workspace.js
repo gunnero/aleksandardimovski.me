@@ -28,3 +28,8 @@ const revealNavigationItem = (item) => item?.scrollIntoView({ block: 'nearest', 
 
 workspaceNavigation?.addEventListener('focusin', (event) => revealNavigationItem(event.target.closest('a')));
 revealNavigationItem(workspaceNavigation?.querySelector('.is-current'));
+
+document.addEventListener('submit', (event) => {
+    const form = event.target.closest('form[data-confirm]');
+    if (form && !window.confirm(form.dataset.confirm)) event.preventDefault();
+});
