@@ -9,10 +9,13 @@ final class PortfolioContent
     private const PROJECT_FIELDS = ['slug', 'name', 'eyebrow', 'summary', 'context', 'problem', 'role', 'responsibilities', 'approach', 'technology', 'challenges', 'security', 'outcome', 'lessons', 'repository', 'confidential', 'featured'];
 
     private const PUBLIC_PROJECT_LINKS = [
+        'razbudise' => ['repository' => 'https://github.com/gunnero/razbudise', 'live_url' => 'https://razbudise.mk', 'confidential' => false],
         'buildiq' => ['repository' => 'https://github.com/gunnero/BuildIQ', 'live_url' => null, 'confidential' => false],
         'mediahub' => ['repository' => 'https://github.com/gunnero/mediahub', 'live_url' => null, 'confidential' => false],
         'kalveri' => ['repository' => 'https://github.com/gunnero/kalveri', 'live_url' => 'https://kalveri.com', 'confidential' => false],
     ];
+
+    private const PROJECT_PRIORITY = ['razbudise', 'buildiq', 'mediahub', 'hera-backoffice', 'nema30-backoffice', 'kalveri'];
 
     private const PROJECT_EVIDENCE_FIELDS = ['executive_summary', 'architecture', 'production', 'roadmap', 'diagram'];
 
@@ -28,7 +31,7 @@ final class PortfolioContent
             $public = array_merge($public, $evidence);
 
             return $public;
-        })->all();
+        })->sortBy(fn (array $project): int => array_search($project['slug'], self::PROJECT_PRIORITY, true))->values()->all();
     }
 
     public function project(string $slug): ?array

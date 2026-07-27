@@ -9,7 +9,7 @@ class Program007Test extends TestCase
 {
     public function test_approved_public_projects_have_descriptive_repository_links(): void
     {
-        foreach (['buildiq' => 'https://github.com/gunnero/BuildIQ', 'mediahub' => 'https://github.com/gunnero/mediahub', 'kalveri' => 'https://github.com/gunnero/kalveri'] as $slug => $repository) {
+        foreach (['razbudise' => 'https://github.com/gunnero/razbudise', 'buildiq' => 'https://github.com/gunnero/BuildIQ', 'mediahub' => 'https://github.com/gunnero/mediahub', 'kalveri' => 'https://github.com/gunnero/kalveri'] as $slug => $repository) {
             $project = app(PortfolioContent::class)->project($slug);
             $this->assertSame($repository, $project['repository']);
             $this->get('/projects/'.$slug)->assertOk()->assertSee($repository)->assertSee('View repository')->assertSee('noopener noreferrer');
@@ -18,7 +18,7 @@ class Program007Test extends TestCase
 
     public function test_private_projects_never_expose_repository_urls(): void
     {
-        foreach (['hera-backoffice', 'nema30-backoffice', 'razbudise'] as $slug) {
+        foreach (['hera-backoffice', 'nema30-backoffice'] as $slug) {
             $project = app(PortfolioContent::class)->project($slug);
             $this->assertNull($project['repository']);
             $this->get('/projects/'.$slug)->assertOk()->assertSee('Private commercial repository.')->assertDontSee('github.com/gunnero/');
@@ -33,6 +33,16 @@ class Program007Test extends TestCase
             ->assertDontSee('Tv'.'time')
             ->assertDontSee('onefivefour'.'-ai-platform');
         $this->get('/projects/buildiq')->assertSee('"codeRepository":"https://github.com/gunnero/BuildIQ"', false);
+        $this->get('/projects/razbudise')->assertSee('"codeRepository":"https://github.com/gunnero/razbudise"', false);
+    }
+
+    public function test_razbudise_is_the_primary_featured_project(): void
+    {
+        $projects = app(PortfolioContent::class)->projects();
+
+        $this->assertSame('razbudise', $projects[0]['slug']);
+        $this->assertTrue($projects[0]['featured']);
+        $this->get('/')->assertOk()->assertSeeInOrder(['Razbudise', 'BuildIQ', 'MediaHub']);
     }
 
     public function test_resume_contains_clickable_public_evidence_and_local_qr_assets(): void
