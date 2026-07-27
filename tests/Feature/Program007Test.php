@@ -49,6 +49,9 @@ class Program007Test extends TestCase
     {
         $this->get('/resume')->assertOk()
             ->assertSee('Public engineering evidence')
+            ->assertSeeInOrder(['Razbudise', 'BuildIQ', 'MediaHub'])
+            ->assertSee('https://aleksandardimovski.me/projects/razbudise')
+            ->assertSee('https://github.com/gunnero/razbudise')
             ->assertSee('https://aleksandardimovski.me/projects/buildiq')
             ->assertSee('https://aleksandardimovski.me/projects/mediahub')
             ->assertSee('https://github.com/gunnero/aleksandardimovski.me')
@@ -56,6 +59,7 @@ class Program007Test extends TestCase
             ->assertSee('https://www.linkedin.com/in/dimovskialeksandar/')
             ->assertDontSee('onefivefour'.'-ai-platform');
 
+        $this->assertFileExists(public_path('images/qr/razbudise-case-study.png'));
         $this->assertFileExists(public_path('images/qr/buildiq-case-study.png'));
         $this->assertFileExists(public_path('images/qr/mediahub-case-study.png'));
     }
