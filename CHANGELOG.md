@@ -9,6 +9,11 @@
 
 ## [Unreleased]
 
+### Razbudise priority
+
+- Promoted Razbudise to the primary portfolio and resume engineering-evidence position.
+- Added a public Razbudise repository link and locally generated case-study QR code.
+
 ### Program 006
 
 - Refined article detail pages with a compact aligned header and 720px long-form reading column.
