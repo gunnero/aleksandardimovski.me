@@ -7,10 +7,10 @@ use Tests\TestCase;
 
 class Program005Test extends TestCase
 {
-    public function test_articles_index_lists_three_published_articles_and_hides_drafts(): void
+    public function test_articles_index_lists_six_published_articles_and_hides_drafts(): void
     {
         $articles = app(PortfolioContent::class)->articles();
-        $this->assertCount(3, $articles);
+        $this->assertCount(6, $articles);
 
         $index = $this->get('/articles')->assertOk()->assertSee('Practical engineering notes from real systems.');
         foreach ($articles as $article) {
@@ -46,8 +46,8 @@ class Program005Test extends TestCase
             $descriptions[] = $description[1];
         }
 
-        $this->assertCount(3, array_unique($titles));
-        $this->assertCount(3, array_unique($descriptions));
+        $this->assertCount(count(app(PortfolioContent::class)->articles()), array_unique($titles));
+        $this->assertCount(count(app(PortfolioContent::class)->articles()), array_unique($descriptions));
     }
 
     public function test_sitemap_and_internal_article_links_are_valid(): void
@@ -92,6 +92,6 @@ class Program005Test extends TestCase
         $this->get('/')->assertOk()
             ->assertSee('Selected work')
             ->assertSee('Latest writing')
-            ->assertSee('What Building BuildIQ Taught Me About Python, FastAPI, and Product Engineering');
+            ->assertSee('Building a Modern Publishing Platform Beyond WordPress');
     }
 }

@@ -16,6 +16,12 @@ Public writing may describe exact-commit releases, runtime checks, protected env
 
 Do not publish server hostnames, IP addresses, usernames, absolute production paths, certificate topology, backup locations, SSH commands, or private domains.
 
+## Razbudise boundary
+
+Razbudise is a digital publishing and editorial workflow platform in active development using PHP, Laravel, a REST API, Next.js, and TypeScript. Public writing may discuss WordPress content migration, explicit conversation decisions, assignments, ownership, approval and rejection, traceability, draft-only delivery, commands, tests, and documented acceptance rules.
+
+Do not claim completed automated publication, publication volume, audience size, customers, revenue, adoption, funding, or commercial success. Do not expose unpublished content, private conversations, internal endpoints, credentials, infrastructure, or production topology. Migration success and editorial publication must remain distinct claims.
+
 ## Personal boundary
 
 Do not add LinkedIn, date of birth, nationality, private contact information, or unverified chronology. Existing public email, telephone, location, GitHub profile, titles, and reviewed employment chronology remain governed by the resume source of truth.

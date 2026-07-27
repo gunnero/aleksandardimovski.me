@@ -29,6 +29,9 @@ class Program006Test extends TestCase
     public function test_approved_callouts_render_semantically(): void
     {
         $expectations = [
+            'building-a-modern-publishing-platform-beyond-wordpress' => 'Engineering principle',
+            'designing-editorial-workflows-with-explicit-state-and-ownership' => 'Key takeaway',
+            'migrating-wordpress-content-safely-into-laravel-and-nextjs' => 'Production note',
             'what-building-buildiq-taught-me-about-python-fastapi-and-product-engineering' => 'Key takeaway',
             'modernizing-legacy-php-systems-without-breaking-production' => 'Engineering principle',
             'safe-production-deployments-for-laravel-and-legacy-php' => 'Production note',
@@ -51,7 +54,7 @@ class Program006Test extends TestCase
         $middle = $this->get('/articles/'.$articles[1]['slug'])->assertOk();
         $middle->assertSee('Previous article')->assertSee('Next article →');
 
-        $oldest = $this->get('/articles/'.$articles[2]['slug'])->assertOk();
+        $oldest = $this->get('/articles/'.$articles[array_key_last($articles)]['slug'])->assertOk();
         $oldest->assertDontSee('← Previous article')->assertSee('Next article →');
     }
 

@@ -21,7 +21,7 @@ class ContentTest extends TestCase
     public function test_drafts_are_not_publicly_loaded(): void
     {
         $articles = app(PortfolioContent::class)->articles();
-        $this->assertCount(3, $articles);
+        $this->assertCount(6, $articles);
         $this->assertSame('published', $articles[0]['status']);
         $this->get('/articles/engineering-notes-draft')->assertNotFound();
     }
