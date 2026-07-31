@@ -60,17 +60,20 @@ class Program004Test extends TestCase
 
     public function test_overlapping_roles_explain_the_verified_working_arrangement(): void
     {
-        $context = 'Some roles overlap because they were full-time, deliverable-based positions with flexible schedules rather than fixed daily working hours.';
-        $arrangement = 'Full-time | Flexible, deliverable-based schedule';
+        $context = 'S/N Insurance was a full-time role with a fixed 08:00-16:00 schedule. The other overlapping roles used flexible, deliverable-based schedules';
+        $flexibleArrangement = 'Full-time | Flexible, deliverable-based schedule';
+        $fixedArrangement = 'Full-time | Fixed schedule, 08:00-16:00';
 
         $resume = $this->get('/resume')->assertOk();
         $resume->assertSee($context);
-        $this->assertSame(4, substr_count($resume->getContent(), $arrangement));
+        $this->assertSame(3, substr_count($resume->getContent(), $flexibleArrangement));
+        $this->assertSame(1, substr_count($resume->getContent(), $fixedArrangement));
 
         $experience = $this->get('/experience')->assertOk();
         $experience->assertSee('Concurrent working arrangements');
         $experience->assertSee($context);
-        $this->assertSame(4, substr_count($experience->getContent(), $arrangement));
+        $this->assertSame(3, substr_count($experience->getContent(), $flexibleArrangement));
+        $this->assertSame(1, substr_count($experience->getContent(), $fixedArrangement));
 
         $resume->assertDontSee('employers were aware');
         $experience->assertDontSee('employers were aware');

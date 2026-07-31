@@ -2,7 +2,7 @@
 
 return [
     'summary' => 'Senior PHP / Laravel Engineer with more than a decade of experience developing, modernizing, deploying, and supporting business-critical web applications. Strong background in PHP, Laravel, SQL databases, REST integrations, Linux infrastructure, and production operations, complemented by current hands-on product work with Python, FastAPI, React, TypeScript, and PostgreSQL.',
-    'employment_context' => 'Some roles overlap because they were full-time, deliverable-based positions with flexible schedules rather than fixed daily working hours. Work was organized independently around agreed responsibilities and deadlines.',
+    'employment_context' => 'S/N Insurance was a full-time role with a fixed 08:00-16:00 schedule. The other overlapping roles used flexible, deliverable-based schedules, with work organized independently around agreed responsibilities and deadlines.',
     'competencies' => ['Senior PHP and Laravel development', 'Backend engineering', 'Legacy PHP modernization', 'REST APIs and business rules', 'Authentication and authorization', 'SQL databases', 'Linux and production operations', 'Testing, CI/CD, and release validation'],
     'skill_groups' => [
         'Backend' => ['PHP', 'Laravel', 'REST APIs', 'Authentication and authorization', 'Business rules', 'Background processing', 'Python', 'FastAPI'],
@@ -27,7 +27,7 @@ return [
             'company' => 'S/N Insurance Broker AD Bitola',
             'title' => 'Head of IT',
             'period' => 'November 2018 - January 2025',
-            'arrangement' => 'Full-time | Flexible, deliverable-based schedule',
+            'arrangement' => 'Full-time | Fixed schedule, 08:00-16:00',
             'summary' => 'Led application, infrastructure, security, reporting, support, backup, and vendor operations for the insurance broker and five additional companies.',
             'highlights' => [
                 'Developed and maintained internal business and reporting workflows backed by SQL Server and MySQL',

@@ -10,7 +10,7 @@ IT Academy Alexandria is placed under Education and Training because the verifie
 
 ## Verified working arrangement
 
-Niipit, S/N Insurance Broker, NicheStack, and TSBA were full-time arrangements with flexible, deliverable-based schedules rather than fixed daily working hours. Their dates overlap because work was organized independently around agreed responsibilities and deadlines. This clarification describes scheduling only; it does not claim employer awareness, exclusivity terms, or a different legal classification.
+Niipit, S/N Insurance Broker, NicheStack, and TSBA were full-time arrangements. S/N Insurance Broker had a fixed 08:00-16:00 schedule. Niipit, NicheStack, and TSBA used flexible, deliverable-based schedules, with work organized independently around agreed responsibilities and deadlines. This clarification describes scheduling only; it does not claim employer awareness, exclusivity terms, or a different legal classification.
 
 ## Derived wording
 
