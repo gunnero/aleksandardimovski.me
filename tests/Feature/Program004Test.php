@@ -79,6 +79,19 @@ class Program004Test extends TestCase
         $experience->assertDontSee('employers were aware');
     }
 
+    public function test_experience_surfaces_verified_delivery_scope_without_overclaiming(): void
+    {
+        foreach (['six servers', 'more than 200 employees', 'more than 10 internal applications', 'two external technology vendors', 'at least 10 Laravel applications', 'at least five complete customer-facing'] as $scope) {
+            $this->get('/experience')->assertOk()->assertSee($scope);
+        }
+
+        $resume = $this->get('/resume')->assertOk();
+        $resume->assertSee('Stripe and Danish online-payment integrations');
+        $resume->assertSee('external insurance-industry platforms and counterparties across North Macedonia');
+        $resume->assertDontSee('all Danish banks');
+        $resume->assertDontSee('all insurance brokers');
+    }
+
     public function test_public_identity_does_not_present_personal_projects_as_employment(): void
     {
         $about = $this->get('/about')->assertOk();
