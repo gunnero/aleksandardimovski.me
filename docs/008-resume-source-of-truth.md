@@ -8,13 +8,17 @@ Program 004 adds a verified distinction between long-term professional PHP/Larav
 
 IT Academy Alexandria is placed under Education and Training because the verified description is primarily a training program with early practical experience, not conventional long-term employment.
 
+## Verified working arrangement
+
+Niipit, S/N Insurance Broker, NicheStack, and TSBA were full-time arrangements with flexible, deliverable-based schedules rather than fixed daily working hours. Their dates overlap because work was organized independently around agreed responsibilities and deadlines. This clarification describes scheduling only; it does not claim employer awareness, exclusivity terms, or a different legal classification.
+
 ## Derived wording
 
-Summaries and bullets condense the supplied positioning into recruiter-readable language. They describe responsibilities and technologies without adding scale, outcomes, employment type, or metrics.
+Summaries and bullets condense the supplied positioning into recruiter-readable language. They describe responsibilities and technologies without adding unsupported scale, outcomes, or metrics.
 
 ## Unverified facts intentionally omitted
 
-Employment type, team size, revenue, customer/user counts, funding, formal degree status, C1 English, additional languages, quantified gains, and unsupported achievements are omitted.
+Employment type for roles other than Niipit, S/N Insurance Broker, NicheStack, and TSBA; team size; revenue; customer/user counts; funding; formal degree status; C1 English; additional languages; quantified gains; and unsupported achievements are omitted.
 
 ## Confidential details intentionally excluded
 

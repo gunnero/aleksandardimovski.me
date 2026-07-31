@@ -58,6 +58,24 @@ class Program004Test extends TestCase
         $resume->assertDontSee('Nationality');
     }
 
+    public function test_overlapping_roles_explain_the_verified_working_arrangement(): void
+    {
+        $context = 'Some roles overlap because they were full-time, deliverable-based positions with flexible schedules rather than fixed daily working hours.';
+        $arrangement = 'Full-time | Flexible, deliverable-based schedule';
+
+        $resume = $this->get('/resume')->assertOk();
+        $resume->assertSee($context);
+        $this->assertSame(4, substr_count($resume->getContent(), $arrangement));
+
+        $experience = $this->get('/experience')->assertOk();
+        $experience->assertSee('Concurrent working arrangements');
+        $experience->assertSee($context);
+        $this->assertSame(4, substr_count($experience->getContent(), $arrangement));
+
+        $resume->assertDontSee('employers were aware');
+        $experience->assertDontSee('employers were aware');
+    }
+
     public function test_public_identity_does_not_present_personal_projects_as_employment(): void
     {
         $about = $this->get('/about')->assertOk();
