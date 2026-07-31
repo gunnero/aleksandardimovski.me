@@ -13,7 +13,7 @@ Program 003 moves the portfolio from résumé-led project summaries toward engin
 - Hera Backoffice is a legacy-modernization case study.
 - Nema30 Backoffice is a production PHP business-system case study.
 - Razbudise is an editorial-workflow case study.
-- Kalveri describes company direction and shared engineering standards.
+- Kalveri describes a personal umbrella project and shared practices for independent engineering work.
 - Engineering Principles and Release History are new public sections.
 
 Every project provides the same reviewable structure: Executive Summary, Problem, Role, Responsibilities, Technical Stack, Architecture, Engineering Challenges, Security Considerations, Production Considerations, Lessons Learned, Current Status, and Future Roadmap.

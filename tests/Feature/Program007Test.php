@@ -45,22 +45,18 @@ class Program007Test extends TestCase
         $this->get('/')->assertOk()->assertSeeInOrder(['Razbudise', 'BuildIQ', 'MediaHub']);
     }
 
-    public function test_resume_contains_clickable_public_evidence_and_local_qr_assets(): void
+    public function test_resume_contains_focused_clickable_project_evidence(): void
     {
         $this->get('/resume')->assertOk()
-            ->assertSee('Public engineering evidence')
+            ->assertSee('Selected engineering projects')
             ->assertSeeInOrder(['Razbudise', 'BuildIQ', 'MediaHub'])
             ->assertSee('https://aleksandardimovski.me/projects/razbudise')
-            ->assertSee('https://github.com/gunnero/razbudise')
             ->assertSee('https://aleksandardimovski.me/projects/buildiq')
             ->assertSee('https://aleksandardimovski.me/projects/mediahub')
-            ->assertSee('https://github.com/gunnero/aleksandardimovski.me')
-            ->assertSee('https://github.com/gunnero/kalveri')
             ->assertSee('https://www.linkedin.com/in/dimovskialeksandar/')
+            ->assertDontSee('resume-qr')
             ->assertDontSee('onefivefour'.'-ai-platform');
 
-        $this->assertFileExists(public_path('images/qr/razbudise-case-study.png'));
-        $this->assertFileExists(public_path('images/qr/buildiq-case-study.png'));
-        $this->assertFileExists(public_path('images/qr/mediahub-case-study.png'));
+        $this->assertStringNotContainsString('Kalveri', json_encode(config('resume'), JSON_THROW_ON_ERROR));
     }
 }

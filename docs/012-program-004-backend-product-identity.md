@@ -8,15 +8,15 @@ Refresh the portfolio and final resume so the public identity reflects current b
 
 - Primary: **Senior PHP / Laravel Engineer**
 - Secondary: **Backend & Product Engineer**
-- Company role: **Founder & Lead Software Engineer at Kalveri**
+- Independent-project context: **Creator and Independent Product Engineer for Kalveri**, a personal umbrella project rather than a company or employer
 
 The supporting narrative states more than ten years of professional PHP and web-software experience. Python, FastAPI, React, TypeScript, and PostgreSQL are presented as current product-development experience through BuildIQ, not as a decade-long specialty or a separate commercial employment role.
 
 ## Identity changes
 
 - Homepage hierarchy communicates the primary and secondary titles within the first screen.
-- About connects the PHP/Laravel foundation, infrastructure ownership, current BuildIQ stack, and Kalveri product ownership.
-- Resume summary, technical competencies, Kalveri highlights, and selected projects follow the same experience boundaries.
+- About connects the PHP/Laravel foundation, infrastructure ownership, current BuildIQ stack, and independent project work.
+- Resume summary, technical competencies, and selected projects follow the same experience boundaries; Kalveri is excluded from employment history.
 - Person JSON-LD contains the two approved professional titles without stuffing every technology into structured data.
 
 ## BuildIQ correction

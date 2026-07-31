@@ -8,7 +8,7 @@ class Program002Test extends TestCase
 {
     public function test_verified_identity_and_chronology_are_public(): void
     {
-        $this->get('/resume')->assertOk()->assertSee('aleksandar.dimovski@me.com')->assertSee('+389 75 458 790')->assertSee('Bitola 7000, North Macedonia')->assertSee('Founder &amp; Lead Software Engineer', false)->assertSee('November 2018 – January 2025')->assertSee('github.com/gunnero');
+        $this->get('/resume')->assertOk()->assertSee('aleksandar.dimovski@me.com')->assertSee('+389 75 458 790')->assertSee('Bitola 7000, North Macedonia')->assertSee('Senior PHP Developer / Server Administrator')->assertSee('November 2018 - January 2025')->assertSee('github.com/gunnero')->assertDontSee('Founder &amp; Lead Software Engineer', false);
     }
 
     public function test_only_verified_linkedin_and_no_unsupported_commercial_claims_exist(): void

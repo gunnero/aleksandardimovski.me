@@ -20,4 +20,4 @@ Employment type, team size, revenue, customer/user counts, funding, formal degre
 
 Private code, repositories, credentials, internal URLs, customer information, production architecture, financial data, and client-sensitive workflows never belong in resume or portfolio content.
 
-Public engineering evidence is ordered with Razbudise first, followed by BuildIQ, MediaHub, the portfolio, and Kalveri. Razbudise and BuildIQ receive QR codes that point to their portfolio case studies. Every destination is also selectable and clickable, preserving ATS access and making no information QR-only. `docs/022-resume-qr-code-policy.md` defines the generation and verification boundary.
+Public engineering evidence is ordered with Razbudise first, followed by BuildIQ and MediaHub. These are presented as selected projects rather than employment. Each project uses a selectable, clickable case-study link and concise, verified evidence. Kalveri is intentionally excluded from the resume because it is currently a project rather than a company or employment role.

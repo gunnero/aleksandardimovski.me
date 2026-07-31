@@ -51,7 +51,7 @@
 
 ### Changed
 
-- Strengthened homepage positioning and corrected Kalveri as an active company and product ecosystem.
+- Strengthened homepage positioning. Kalveri was later factually corrected from company positioning to a personal umbrella project.
 - Improved mobile navigation, theme-state announcements, touch targets, heading order, PDF status, and error-page indexing behavior.
 - Made Markdown rendering XSS-safe and repaired JSON-LD rendering with parse-level tests.
 - Removed unused database scaffolding and starter packages; aligned local and CI workflows with the database-free release.
