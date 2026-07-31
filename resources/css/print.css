@@ -194,7 +194,9 @@
         display: flex !important;
     }
 
-    .resume-final .public-work { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 6pt 14pt; }
-    .resume-final .public-work-entry { display: grid !important; grid-template-columns: 1fr 54pt !important; gap: 7pt; align-items: center; }
-    .resume-final .resume-qr { width: 54pt; height: 54pt; padding: 3pt; background: #fff !important; border: .5pt solid #bbb !important; }
+    .resume-final .resume-project-list { display: grid !important; grid-template-columns: 1fr !important; gap: 5pt; }
+    .resume-final .resume-project { break-inside: avoid; }
+    .resume-final .resume-project .role-heading { align-items: baseline; }
+    .resume-final .resume-project .role-heading a { margin-left: auto; font-size: 7.6pt; }
+    .resume-final .resume-project .project-stack { font-size: 7.6pt; font-weight: 700; color: #111 !important; }
 }

@@ -6,4 +6,4 @@ Public links require explicit confirmation that a repository is public and recru
 
 The approved public repository set is BuildIQ, MediaHub, Kalveri, and this portfolio. All other repositories remain unlinked unless a later evidence review explicitly approves them; quarantined repositories do not become eligible merely because their visibility is public.
 
-BuildIQ, MediaHub, and Razbudise are active products. Hera and Nema30 are distinct sanitized legacy/backoffice engagements. Kalveri is the software company and product ecosystem, not a single completed application.
+BuildIQ, MediaHub, and Razbudise are active independent projects. Hera and Nema30 are distinct sanitized legacy/backoffice engagements. Kalveri is a personal umbrella project for organizing independent software work, not a company, employer, or completed application.

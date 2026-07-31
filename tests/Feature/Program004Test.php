@@ -47,12 +47,33 @@ class Program004Test extends TestCase
     public function test_resume_keeps_verified_chronology_and_omissions(): void
     {
         $resume = $this->get('/resume')->assertOk();
-        foreach (['November 2018 – January 2025', '2026 – Present', 'Senior PHP Developer / Server Administrator', 'aleksandar.dimovski@me.com', '+389 75 458 790', 'Bitola 7000, North Macedonia'] as $fact) {
+        foreach (['November 2018 - January 2025', 'Senior PHP Developer / Server Administrator', 'aleksandar.dimovski@me.com', '+389 75 458 790', 'Bitola 7000, North Macedonia'] as $fact) {
             $resume->assertSee($fact);
         }
+        $resume->assertDontSee('Founder &amp; Lead Software Engineer', false);
+        $this->assertStringNotContainsString('Kalveri', json_encode(config('resume'), JSON_THROW_ON_ERROR));
+        $resume->assertDontSee('Laravel 8 From Scratch');
         $resume->assertSee('linkedin.com/in/dimovskialeksandar');
         $resume->assertDontSee('Date of birth');
         $resume->assertDontSee('Nationality');
+    }
+
+    public function test_public_identity_does_not_present_personal_projects_as_employment(): void
+    {
+        $about = $this->get('/about')->assertOk();
+        $about->assertSee('personal umbrella project');
+        $about->assertSee('not a company, employer, or commercial venture');
+        $about->assertDontSee('Founder &amp; Lead Software Engineer', false);
+
+        foreach (['buildiq', 'mediahub', 'razbudise', 'kalveri'] as $slug) {
+            $project = $this->get('/projects/'.$slug)->assertOk();
+            $project->assertDontSee('Founder and Product Engineer');
+            $project->assertDontSee('Founder, Backend &amp; Product Engineer', false);
+        }
+
+        $home = $this->get('/')->assertOk()->getContent();
+        $this->assertStringNotContainsString('worksFor', $home);
+        $this->assertStringNotContainsString('Founder & Lead Software Engineer at Kalveri', $home);
     }
 
     public function test_final_resume_pdf_exists(): void

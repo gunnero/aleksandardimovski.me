@@ -25,7 +25,7 @@ The implementation does not contain verified employment dates, education, certif
 - **Hera Backoffice:** Correctly separated as legacy PHP business-administration modernization and maintenance, with a strong confidentiality note.
 - **Nema30 Backoffice:** Correctly distinguished through document generation, operational workflows, compatibility, deployment migration, and production support.
 - **Razbudise:** Presented as API-first publishing and migration foundation without claiming a completed public launch.
-- **Kalveri:** Corrected during review from a generic completed web platform to an evolving software company and product ecosystem. No unreleased plans or commercial success are claimed.
+- **Kalveri:** Later corrected from company positioning to a personal umbrella project for independent software work. It is not presented as an employer or commercial venture.
 
 ## Resume review
 
@@ -78,7 +78,7 @@ Platform requirements are checked from the reviewed release before activation. R
 | P001-R03 | High | Resume lacks verified chronology and supporting facts | Open; factual input required |
 | P001-R04 | High | Production PHP/Laravel compatibility is unconfirmed | Resolved; runtime and required extensions verified |
 | P001-R05 | Medium | Future article Markdown allowed raw HTML/unsafe links | Fixed and tested |
-| P001-R06 | Medium | Kalveri was inaccurately framed as a finished generic platform | Fixed |
+| P001-R06 | Medium | Kalveri was inaccurately framed as a finished platform and later as a company | Fixed: personal-project positioning |
 | P001-R07 | Medium | Name, Product Engineer position, and 10+ years were weak in the hero | Fixed |
 | P001-R08 | Medium | Mobile control names, theme state, heading order, and touch targets failed automated checks | Fixed |
 | P001-R09 | Medium | PDF-unavailable control was hidden on mobile | Fixed |
